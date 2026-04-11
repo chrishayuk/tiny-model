@@ -1,0 +1,16 @@
+# Example config. Copy to configs/custom.yaml and edit.
+
+output_dir: datasets/extracted/
+raw_dir: datasets/raw/
+tokeniser_check: null  # or "google/gemma-3-4b-it"
+
+filter:
+  min_confidence: 0.1
+  max_subject_length: 100
+  max_object_length: 200
+
+datasets:
+  - linguistics/wordnet
+
+# Per-dataset overrides (keyed by dataset name, not category/name):
+wordnet: {}

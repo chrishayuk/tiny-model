@@ -1,0 +1,168 @@
+{
+  "vocab_size": 72000,
+  "max_user_syms": 71000,
+  "wordnet_min_zipf": 2.5,
+  "wordnet_titlecase_top_n": 3000,
+
+  "infra": {
+    "metaspace": ["▁"],
+    "digits": ["0","1","2","3","4","5","6","7","8","9"],
+    "ascii_lower": ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"],
+    "ascii_upper": ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"],
+    "ascii_punct": [".",",","!","?",";",":","'","\"","-","(",")","[","]","{","}","/","<",">","@","#","$","%","^","&","*","+","=","|","~","`","\\"],
+    "code_ops": ["==","!=","<=",">=","->","=>","::","..","...","&&","||","<<",">>","+=","-=","*=","/=","**","++","--",":=","===","!==","?.","??","|>","<-","|=","&=","^=","%=","<>","~="],
+    "greek_lower": ["α","β","γ","δ","ε","ζ","η","θ","ι","κ","λ","μ","ν","ξ","π","ρ","σ","τ","υ","φ","χ","ψ","ω"],
+    "greek_upper": ["Α","Β","Γ","Δ","Ε","Ζ","Η","Θ","Ι","Κ","Λ","Μ","Ν","Ξ","Π","Ρ","Σ","Τ","Υ","Φ","Χ","Ψ","Ω"],
+    "math_operators": ["∑","∏","∐","∫","∬","∭","∮","∯","∰","∂","∇","√","∛","∜","∞","∝","∅","∀","∃","∄","±","∓","∗","∘","∙","⋅","×","÷","⨯","⨁","⨂","⊕","⊖","⊗","⊘","⊙","⊚","⊛","∔","∸"],
+    "math_relations": ["≈","≃","≅","≡","≠","≤","≥","≪","≫","≺","≻","≼","≽","⊂","⊃","⊄","⊅","⊆","⊇","⊊","⊋","∈","∉","∋","∌","≟","≝","≜","≐","∼","∽","⊏","⊐","⊑","⊒","≲","≳","⋖","⋗","⪯","⪰"],
+    "math_logic": ["∧","∨","¬","⊕","⊻","⊼","⊽","∴","∵","⊢","⊣","⊨","⊭","⊤","⊥","⟂","‖"],
+    "math_sets": ["∪","∩","∖","⊎","⨄","⨆","⨅","⨈","⨉","ℕ","ℤ","ℚ","ℝ","ℂ","ℍ","ℙ","ℝ","𝔽"],
+    "math_arrows": ["→","←","↑","↓","↔","↕","⇐","⇒","⇑","⇓","⇔","⇕","↦","↤","↧","↥","⇋","⇌","⇀","⇁","↼","↽","↚","↛","⟶","⟵","⟷","⟹","⟸","⟺","⤖","⤕","⟿","↯"],
+    "math_fractions": ["½","¼","¾","⅓","⅔","⅕","⅖","⅗","⅘","⅙","⅚","⅛","⅜","⅝","⅞","⅐","⅑","⅒","⅟"],
+    "super": ["²","³","⁴","½","¼","¾"],
+    "legal": ["§","¶","©","®","™"],
+    "currency": ["$","€","£","¥","¢"]
+  },
+
+  "function_words": [
+    "the","a","an","of","to","in","on","at","by","for","with","from",
+    "as","is","was","are","were","be","been","being","have","has",
+    "had","do","does","did","will","would","can","could","should",
+    "may","might","must","shall","upon","into","onto","over","under",
+    "above","below","between","through","during","before","after",
+    "since","until","while","because","although","though","if","unless",
+    "whether","when","where","why","how","what","which","who","whom",
+    "whose","that","this","these","those","and","or","but","nor","so",
+    "yet","also","not","no","very","just","only","even","more","most",
+    "some","any","all","each","every","both","few","many","much",
+    "other","another","same","such","he","she","it","we","they","you",
+    "me","him","her","us","them","my","your","his","its","our","their",
+    "mine","yours","hers","ours","theirs"
+  ],
+
+  "morpheme_prefixes": [
+    "un","in","im","ir","il","dis","non","mis","de","pre","post",
+    "anti","auto","bi","co","counter","en","ex","extra","fore","inter",
+    "intra","mid","out","over","re","semi","sub","super","trans","tri",
+    "ultra","under","up","photo","bio","geo","hydro","electro","micro",
+    "macro","mono","multi","neo","para","poly","proto","pseudo","quasi",
+    "retro","tele","thermo","neuro","cardio","paleo","archaeo","astro",
+    "chrono","crypto","infra"
+  ],
+
+  "morpheme_suffixes": [
+    "tion","sion","ment","ness","ity","ence","ance","ism","ist","er",
+    "or","ar","able","ible","ful","less","ous","ive","al","ial","ic",
+    "ical","ish","like","ly","ify","ise","ize","ate","en","ology",
+    "graph","graphy","scope","meter","metry","lysis","synthesis",
+    "phyte","cyte","genic","ing","ed","es","est","s"
+  ],
+
+  "acronyms": [
+    "JSON","XML","HTML","CSS","HTTP","HTTPS","SQL","API","URL","URI",
+    "TCP","UDP","DNS","SSH","SSL","TLS","JWT","REST","CORS","WASM",
+    "GPU","CPU","RAM","PDF","CSV","YAML","TOML","CLI","SDK","IDE",
+    "UTF","ASCII","RGB","HSL","PNG","JPG","SVG","MP3","MP4","ZIP",
+    "TAR","FTP","SMTP","IMAP","LDAP","OAuth"
+  ],
+
+  "priority_languages": [
+    "python","rust","javascript","typescript",
+    "c","cpp","java","go","ruby","swift"
+  ],
+
+  "language_extras": {
+    "python": [
+      "print","len","range","str","int","float","list","dict","tuple",
+      "set","bool","bytes","None","True","False","self","cls"
+    ],
+    "rust": [
+      "i8","i16","i32","i64","i128","u8","u16","u32","u64","u128",
+      "usize","isize","f32","f64","bool","char","str",
+      "Vec","String","Option","Result","Some","None","Ok","Err",
+      "Box","Rc","Arc","HashMap","BTreeMap","Self",
+      "fn","pub","mod","use","trait","impl","unsafe","static",
+      "move","ref","where","dyn","as","self","async","await"
+    ],
+    "c": [
+      "int","char","short","long","float","double","void",
+      "signed","unsigned","const","static","auto","register",
+      "volatile","inline","restrict","typedef","extern",
+      "size_t","ptrdiff_t",
+      "int8_t","int16_t","int32_t","int64_t",
+      "uint8_t","uint16_t","uint32_t","uint64_t",
+      "NULL","malloc","free","calloc","realloc","memcpy","memset",
+      "printf","fprintf","sprintf","scanf","fopen","fclose","fread","fwrite"
+    ],
+    "cpp": [
+      "int","char","short","long","float","double","void",
+      "bool","wchar_t","auto","const","static","constexpr",
+      "mutable","virtual","override","final","explicit","friend",
+      "operator","template","typename","class","struct","using",
+      "namespace","public","private","protected","new","delete",
+      "nullptr","throw","try","catch","noexcept"
+    ],
+    "javascript": [
+      "function","var","let","const","new","this","super",
+      "class","extends","static","get","set","yield","async",
+      "await","true","false","null","undefined","typeof",
+      "instanceof","of","in","delete","void","throw","try",
+      "catch","finally","arguments"
+    ],
+    "typescript": [
+      "interface","type","extends","implements","public","private",
+      "protected","readonly","abstract","static","namespace",
+      "declare","module","enum","number","string","boolean",
+      "any","unknown","never","void","object","null","undefined",
+      "Promise","Array","Map","Set","Symbol","RegExp"
+    ],
+    "java": [
+      "int","char","short","long","float","double","void","boolean",
+      "byte","public","private","protected","static","final",
+      "abstract","synchronized","volatile","transient","native",
+      "package","throws","implements","extends","super","this",
+      "instanceof","new","return","null","true","false",
+      "Object","String","Integer","Long","Boolean","Double",
+      "Float","Byte","Short","Character","System","ArrayList",
+      "HashMap","LinkedList","Iterator","Override"
+    ],
+    "go": [
+      "chan","range","select","switch","type","var","struct",
+      "int","int8","int16","int32","int64","uint","uint8","uint16",
+      "uint32","uint64","uintptr","byte","rune","float32","float64",
+      "complex64","complex128","bool","string","error",
+      "true","false","nil","make","new","len","cap","append","copy",
+      "delete","panic","recover","fmt","Println","Printf"
+    ],
+    "ruby": [
+      "def","end","class","module","if","elsif","else","case","when",
+      "while","until","for","in","do","begin","rescue","ensure",
+      "raise","retry","return","yield","lambda","proc","self","nil",
+      "true","false","not","and","or","attr_accessor","attr_reader",
+      "attr_writer","require","include","extend","new","to_s","each"
+    ],
+    "swift": [
+      "func","var","let","class","struct","enum","protocol","extension",
+      "public","private","internal","fileprivate","open","static",
+      "final","override","required","convenience","lazy","weak",
+      "unowned","init","deinit","self","Self","nil","true","false",
+      "Int","Double","Float","String","Bool","Array","Dictionary",
+      "Optional","Any","AnyObject","Void","throws","rethrows","async",
+      "await","guard","defer","where","as","is"
+    ]
+  },
+
+  "wikidata_max_entities": 2000,
+
+  "layers": [
+    {"name": "L0_infra",           "source": "infra"},
+    {"name": "L1_function_words",  "source": "function_words"},
+    {"name": "L2_morphemes",       "source": "morphemes"},
+    {"name": "L3_code_priority",   "source": "code_priority"},
+    {"name": "L4_code_extras",     "source": "code_extras"},
+    {"name": "L5_code_other",      "source": "code_other"},
+    {"name": "L6_acronyms",        "source": "acronyms"},
+    {"name": "L7_lemmas",          "source": "wordnet_lemmas"},
+    {"name": "L8_entities",        "source": "wikidata_entities"}
+  ]
+}

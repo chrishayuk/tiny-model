@@ -1,0 +1,18 @@
+[package]
+name = "v11-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Command-line interface for the v11 knowledge-first tokenizer"
+keywords.workspace = true
+categories.workspace = true
+
+[[bin]]
+name = "v11"
+path = "src/main.rs"
+
+[dependencies]
+v11-core = { path = "../v11-core" }
+anyhow.workspace = true
+clap.workspace = true
+serde_json.workspace = true

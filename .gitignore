@@ -1,0 +1,44 @@
+# Datasets are build artefacts, not source. Both trees regenerate from
+# extractors; neither should live in git history.
+datasets/raw/
+datasets/extracted/
+datasets/extracted-legacy/
+
+# sample outputs
+knowledge-extractor/examples/sample_output/
+
+# bemchmarks
+benchmarks/results/
+
+# Keep the top-level placeholder so the tree structure is visible.
+!datasets/.gitkeep
+
+# Rust build output (tokenizer workspace + v11-python cdylib)
+target/
+**/target/
+*.rlib
+*.rmeta
+
+# Python wheels and sdists from maturin
+*.whl
+*.tar.gz
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+.pytest_cache/
+dist/
+
+# Python build output (setup.py / hatch). Unanchored so it catches
+# `build/` at any depth. The v11 tokenizer's published HF bundle lives
+# at `tokenizer/v11/artifacts/` for this reason — no collision here.
+build/
+
+# Editor / OS
+.DS_Store
+*.swp
+.idea/
+.vscode/
+.claude/

@@ -1,0 +1,11 @@
+# Demo output — regenerate with `python3 examples/run_demo.py`
+examples/_demo_output/
+
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+.pytest_cache/
+dist/
+build/

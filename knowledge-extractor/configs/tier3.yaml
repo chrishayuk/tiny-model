@@ -1,0 +1,26 @@
+# Tier 3 — heavy. Large downloads, long processing, dedicated runs.
+
+output_dir: datasets/extracted/
+raw_dir: datasets/raw/
+tokeniser_check: null
+
+filter:
+  min_confidence: 0.1
+  max_subject_length: 100
+  max_object_length: 200
+
+datasets:
+  # - knowledge/osm
+  # - knowledge/musicbrainz
+  # - knowledge/pubchem
+  # - knowledge/taxonomy
+  # - domain/medical/pubmed
+  # - domain/medical/clinical_trials
+  # - domain/config_schemas
+
+osm:
+  data_path: null
+
+pubmed:
+  data_path: null
+  max_abstracts: null

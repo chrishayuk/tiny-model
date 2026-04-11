@@ -1,0 +1,30 @@
+# Tier 1 — quick wins. Local tools and small downloads.
+#
+# Paths are resolved relative to the current working directory, which is
+# expected to be the monorepo root (tiny-model/). Override with --output
+# and --raw-dir, or with KNOWLEDGE_EXTRACTED_DIR / KNOWLEDGE_RAW_DIR env vars.
+
+output_dir: datasets/extracted/
+raw_dir: datasets/raw/
+tokeniser_check: null  # or "google/gemma-3-4b-it"
+
+filter:
+  min_confidence: 0.1
+  max_subject_length: 100
+  max_object_length: 200
+
+datasets:
+  - linguistics/wordnet
+  - linguistics/morphology
+  - linguistics/framenet
+  - linguistics/verbnet
+  - domain/standards
+  # - ast
+  # - knowledge/wikidata
+  # - domain/api_docs
+  # - domain/cli
+  # - domain/errors
+
+morphology:
+  vocab_limit: 20000
+  per_pos_limit: 3000

@@ -1,0 +1,1 @@
+Thermodynamics describes the relationships between heat, work, temperature, and energy. The four laws of thermodynamics provide the foundation for understanding everything from steam engines to black hole entropy. The first law expresses energy conservation, while the second law introduces the concept of entropy and the arrow of time.

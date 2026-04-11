@@ -1,0 +1,37 @@
+# Tier 2 — medium-weight. Needs real downloads but nothing planetary.
+#
+# Raw files land under datasets/raw/<category>/<dataset>/ by default.
+
+output_dir: datasets/extracted/
+raw_dir: datasets/raw/
+tokeniser_check: null
+
+filter:
+  min_confidence: 0.1
+  max_subject_length: 100
+  max_object_length: 200
+
+datasets:
+  # - linguistics/collocations
+  # - knowledge/dbpedia
+  # - knowledge/geonames
+  # - knowledge/imdb
+  # - knowledge/unicode
+  # - domain/stackoverflow
+  # - domain/openapi
+  # - domain/changelogs
+
+geonames:
+  # files resolved under <raw_dir>/knowledge/geonames/ by default;
+  # set this to override
+  data_path: null
+  min_population: 10000
+
+imdb:
+  data_path: null
+  min_votes: 1000
+
+stackoverflow:
+  data_path: null
+  min_score: 5
+  min_tag_frequency: 1000
