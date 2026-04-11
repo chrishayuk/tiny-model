@@ -9,14 +9,15 @@ file is about sequencing and scope.
 |                  | registered | target | note                             |
 |------------------|-----------:|-------:|----------------------------------|
 | framework        |          ✓ |      — | base split into downloader/extractor phases |
+| tests            |    90 / 90 |      — | pytest suite, `make ke-test`, 0.2s |
 | tier 1           |      8 / 8 |      8 | all tier-1 datasets ported       |
-| tier 2           |     0 / 10 |     10 | next milestone                   |
+| tier 2           |     1 / 10 |     10 | osm-gb registered; in progress   |
 | tier 3           |      0 / 7 |      7 |                                  |
 | ast languages    |         77 |    ~80 | tier 1–3 grammars registered     |
 
 ## Done
 
-### Framework (v0.3.0)
+### Framework (v0.3.1)
 - `BaseDownloader` + `BaseExtractor` contracts; strict phase boundary (no
   network in `extract()` unless `streaming=True`)
 - `NLTKBackedDownloader` + `NLTKRawLayout` shared base for the five
@@ -33,6 +34,14 @@ file is about sequencing and scope.
   accepts dataset / `--tier` / `--category` / `--all` / `--config`
 - Folder-per-dataset layout: each dataset is a package with `model.py`
   (pydantic contract), `downloader.py`, `extractor.py`
+- Per-downloader `tqdm` progress bars: byte-level for osm-gb, per-item
+  (property / language / NLTK package) for the others
+- HTTP Range resume in the osm-gb downloader so killed transfers pick up
+  at the `.tmp` file's current size
+- Pytest suite (90 tests, ~0.2 s) covering the pydantic base contracts,
+  registry integrity, io_utils, writer dedup, normaliser profiles, paths
+  env-var overrides, standards end-to-end, osm-gb pure helpers + geohash,
+  treesitter grammar walker, and wikidata synthetic-dump round trip
 
 ### Extractors
 | key | relations | notes |
@@ -43,6 +52,7 @@ file is about sequencing and scope.
 | `linguistics/morphology` | 11 | lemminflect + WN derivational links |
 | `linguistics/collocations` | 3 | Brown PMI + adj_noun + verb_object |
 | `knowledge/wikidata` | 44 | curated SPARQL properties; raw JSON per property persisted |
+| `knowledge/osm-gb` | 5 | Geofabrik GB extract; is_a, located_in, has_cuisine, has_brand, wikidata_id (ODbL) |
 | `ast/treesitter` | 5 | 77 languages; `<lang>/<symbol>`-scoped subjects |
 | `domain/standards` | 7 | hand-curated IANA tables, zero deps |
 
@@ -62,6 +72,7 @@ Acceptance: `run --tier 1` produces ≥2M pairs across all registered datasets o
 
 Datasets requiring meaningful downloads but nothing planetary:
 
+- `knowledge/osm-gb` — **registered**, first tier-2 port, Geofabrik GB extract (~2GB PBF). Next geography expansion: add `osm-us`, `osm-de`, etc. by copying the folder and retargeting `GEOFABRIK_URL`.
 - `knowledge/dbpedia` (mappingbased objects)
 - `knowledge/geonames` (allCountries.zip, ~300MB)
 - `knowledge/imdb` (title.basics + title.principals, ~1GB)
@@ -76,7 +87,12 @@ Acceptance: `--tier 2` completes in <12h on a laptop, yields ≥5M pairs.
 
 Heavy downloads, long processing, dedicated runs:
 
-- `knowledge/osm` — Geofabrik extracts, amenities/transport/historic
+- `knowledge/osm-planet` — full OpenStreetMap planet PBF (~70 GB
+  compressed, ~2 TB expanded). A qualitative jump from the per-country
+  extracts: needs osmium CLI toolchain, hours of processing, and a
+  tag-filtered first pass to keep the triple count manageable. Only
+  worth it once the per-country extracts (osm-gb, osm-us, osm-de, …)
+  have been validated end-to-end.
 - `knowledge/musicbrainz` — Postgres dump ingest
 - `knowledge/pubchem` — REST API, many requests, rate-limited
 - `knowledge/taxonomy` — GBIF backbone
@@ -119,11 +135,46 @@ Still TODO:
 
 - Web scraping with selenium/playwright — every planned source has a structured download or API.
 - Licence filtering — assumed handled upstream at ingest time.
-- Incremental / resumable runs — current design is idempotent-by-rerun, which is good enough until individual extractors cross the 30-minute mark.
 - Format converters (RDF, Neo4j, etc.) — the JSON triple files are the interchange format.
 
 ## Changelog
 
+- **2026-04-11** — v0.3.1: first tier-2 dataset, developer ergonomics,
+  and a real test suite.
+  - **New dataset: `knowledge/osm-gb`.** Geofabrik GB extract (~2 GB
+    PBF), pyosmium walker, ODbL. Emits `is_a`, `located_in`,
+    `has_cuisine`, `has_brand`, `wikidata_id` on bare `<name>` subjects
+    plus `has_name`, `at_coords`, `in_geohash` on per-instance
+    `<name>#<kind><osm_id>` subjects so chain stores dedup semantically
+    while keeping individual geometry. Self-contained 7-char geohash
+    encoder in the extractor (no dep). Ways resolved via arithmetic
+    centroid of member nodes.
+  - **Progress bars on all real downloaders.** `tqdm` at the right
+    granularity for each: byte-level for osm-gb, per-property for
+    wikidata, per-language for treesitter, per-NLTK-package for the
+    linguistics datasets. Errors use `bar.write()` to avoid breaking
+    the bar layout.
+  - **HTTP Range resume on osm-gb.** A killed download leaves its
+    `.tmp` sibling in place and the next invocation sends
+    `Range: bytes=<partial>-`, picking up where it stopped. Falls back
+    to restart if the server returns a fresh 200.
+  - **Monorepo Makefile generator.** One `DATASETS` list plus a
+    `foreach`/`eval` macro emits `run-<name>`, `download-<name>`, and
+    `extract-<name>` for every registered dataset — 27 targets from one
+    source of truth. Adding a dataset is a one-line change.
+  - **Pytest suite: 90 tests, ~0.2 s.** Covers the pydantic base
+    contracts, registry integrity (parametrised over every dataset),
+    io_utils atomic writes with failure cleanup, writer dedup semantics,
+    normaliser profile dispatch, paths env-var overrides, standards
+    full end-to-end pipeline, osm-gb pure helpers including the
+    Wikipedia-canonical geohash vector, treesitter grammar walkers,
+    and wikidata extraction from a synthesised raw dump. Wired up as
+    `make ke-test` (included in the composite `make test`).
+  - **Bug found and fixed by tests.** `BaseDownloader.raw_path()` had a
+    `mkdir` side effect that made `is_downloaded()` incorrectly report
+    True after just constructing a layout. `raw_path()` is now pure;
+    callers that need to write are expected to use `atomic_write_*`
+    which mkdirs the parent itself, or mkdir explicitly.
 - **2026-04-11** — v0.3.0: download/extract phase split. `BaseDownloader`
   and `BaseExtractor` replace the combined contract. All data models on
   pydantic. Folder-per-dataset layout with `model.py` contract. New

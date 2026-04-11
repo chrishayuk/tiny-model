@@ -36,7 +36,8 @@ DATASETS: dict[str, DatasetSpec] = {
     "linguistics/verbnet":      _pair("linguistics.verbnet", "VerbNet"),
     "linguistics/collocations": _pair("linguistics.collocations", "Collocations"),
     "knowledge/wikidata":       _pair("knowledge.wikidata", "Wikidata"),
-    "ast/treesitter":            _pair("ast.treesitter", "TreeSitter"),
+    "knowledge/osm-gb":         _pair("knowledge.osm_gb", "OsmGb"),
+    "ast/treesitter":           _pair("ast.treesitter", "TreeSitter"),
     "domain/standards":         _pair("domain.standards", "Standards"),
 }
 
@@ -52,7 +53,9 @@ TIERS: dict[int, list[str]] = {
         "knowledge/wikidata",
         "domain/standards",
     ],
-    2: [],
+    2: [
+        "knowledge/osm-gb",
+    ],
     3: [],
 }
 

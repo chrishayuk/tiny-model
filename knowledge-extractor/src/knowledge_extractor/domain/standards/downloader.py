@@ -17,4 +17,4 @@ class StandardsDownloader(BaseDownloader):
 
     def download(self, raw_dir: Path) -> None:
         # Nothing to download — the authoritative tables live in model.py.
-        self.raw_path(raw_dir)
+        pass

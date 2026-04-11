@@ -72,10 +72,17 @@ the default `datasets/{raw,extracted}/` paths resolve correctly.
 ```bash
 make list                # registered datasets
 make run                 # download + extract, tier 1
-make download            # just the raw fetch
-make extract             # just the transform step
-make run-wordnet         # single dataset (also: morphology, framenet, verbnet,
-                         # collocations, wikidata, treesitter, standards)
+make download            # just the raw fetch, tier 1
+make extract             # just the transform step, tier 1
+
+# single-dataset phase targets — all three of run-, download-, extract-
+# are generated from one DATASETS list in the Makefile.
+make run-osm-gb          # download + extract knowledge/osm-gb
+make download-osm-gb     # just fetch the raw PBF (useful for large datasets)
+make extract-osm-gb      # just walk the raw into triples
+# valid names: wordnet morphology framenet verbnet collocations
+#              wikidata osm-gb treesitter standards
+
 make stats               # summarise datasets/extracted/
 make verify              # check manifest consistency
 make coverage            # run the benchmarks sibling project
@@ -151,6 +158,9 @@ Every dataset is a folder with `__init__.py`, `model.py` (pydantic
 - `linguistics/collocations` — bigram_pmi, adjective_noun, verb_object (Brown)
 - `knowledge/wikidata` — 44 curated SPARQL properties across geography,
   people, culture, organisations, science, politics, sport
+- `knowledge/osm-gb` — OpenStreetMap GB extract: named amenities, shops,
+  tourism, historic sites, leisure, natural features; is_a, located_in,
+  has_cuisine, has_brand, wikidata_id (ODbL licence, optional `osm` extra)
 - `ast/treesitter` — 77 languages across 3 tiers; keyword_begins, contains,
   is_a, followed_by, delimiter_role (subjects are `<lang>/<symbol>`-scoped)
 - `domain/standards` — http_status, http_method, dns_record, tcp_port,

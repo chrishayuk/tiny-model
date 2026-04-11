@@ -26,8 +26,8 @@ Index:
 
 ## Knowledge (L14-27, knowledge band)
 
-- `knowledge/wikidata` — 44 curated SPARQL properties: geography, people,
-  culture, organisations, science, politics, sport (doc TODO)
+- `knowledge/wikidata` — 44 curated SPARQL properties across geography, people, culture, organisations, science, politics, and sport (doc TODO)
+- [osm-gb](./knowledge-osm-gb.md) — OpenStreetMap GB extract: named amenities, shops, tourism, historic, leisure, and natural features with per-instance geometry
 
 ## Domain (L14-27, knowledge band)
 
@@ -37,8 +37,9 @@ Index:
 
 These have roadmap entries but no extractor yet:
 
-- `knowledge/dbpedia`, `knowledge/geonames`, `knowledge/osm`, `knowledge/imdb`,
-  `knowledge/musicbrainz`, `knowledge/pubchem`, `knowledge/taxonomy`, `knowledge/unicode`,
+- `knowledge/dbpedia`, `knowledge/geonames`, `knowledge/osm-*` (other countries),
+  `knowledge/imdb`, `knowledge/musicbrainz`, `knowledge/pubchem`,
+  `knowledge/taxonomy`, `knowledge/unicode`,
   `domain/stackoverflow`, `domain/api_docs`, `domain/cli`, `domain/openapi`,
   `domain/medical/{pubmed,clinical_trials}`, `domain/errors`,
   `domain/changelogs`, `domain/config_schemas`.

@@ -14,6 +14,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
+from tqdm import tqdm
 
 from ...base import BaseDownloader, DatasetMeta
 from ...io_utils import atomic_write_json
@@ -105,30 +106,35 @@ class WikidataDownloader(BaseDownloader):
             }
         )
 
-        for prop in PROPERTIES:
-            target = layout.property_path(prop.pid)
-            if target.exists():
-                continue
+        with tqdm(PROPERTIES, desc="wikidata", unit="prop", leave=False) as bar:
+            for prop in bar:
+                bar.set_postfix_str(f"{prop.pid} {prop.relation}")
+                target = layout.property_path(prop.pid)
+                if target.exists():
+                    continue
 
-            try:
-                bindings, query, final_limit = _run_sparql(
-                    session, prop.pid, limit, label_max
+                try:
+                    bindings, query, final_limit = _run_sparql(
+                        session, prop.pid, limit, label_max
+                    )
+                except Exception as e:
+                    bar.write(
+                        f"[wikidata] {prop.pid} {prop.relation}: "
+                        f"{type(e).__name__}: {e}"
+                    )
+                    continue
+
+                dump = WikidataPropertyDump(
+                    pid=prop.pid,
+                    relation=prop.relation,
+                    category=prop.category,
+                    description=prop.description,
+                    query=query,
+                    limit=final_limit,
+                    label_max=label_max,
+                    downloaded_at=datetime.now(timezone.utc).isoformat(),
+                    bindings=bindings,
                 )
-            except Exception as e:
-                print(f"[wikidata] {prop.pid} {prop.relation}: {type(e).__name__}: {e}")
-                continue
-
-            dump = WikidataPropertyDump(
-                pid=prop.pid,
-                relation=prop.relation,
-                category=prop.category,
-                description=prop.description,
-                query=query,
-                limit=final_limit,
-                label_max=label_max,
-                downloaded_at=datetime.now(timezone.utc).isoformat(),
-                bindings=bindings,
-            )
-            atomic_write_json(target, dump.model_dump())
-            # Politeness sleep only on successful fetch, not on cache skip.
-            time.sleep(DEFAULT_SLEEP_BETWEEN)
+                atomic_write_json(target, dump.model_dump())
+                # Politeness sleep only on successful fetch, not on cache skip.
+                time.sleep(DEFAULT_SLEEP_BETWEEN)

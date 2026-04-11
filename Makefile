@@ -28,7 +28,12 @@ help:
 	@echo "  download         download raw sources for tier 1"
 	@echo "  extract          extract triples from raw (assumes download done)"
 	@echo "  run              download + extract for tier 1"
-	@echo "  run-ARG          run a single dataset, e.g. 'make run-wordnet'"
+	@echo "  run-NAME         run a single dataset, e.g. 'make run-osm-gb'"
+	@echo "  download-NAME    download a single dataset (no extract)"
+	@echo "  extract-NAME     extract a single dataset (assumes raw present)"
+	@echo "                   valid names:  wordnet morphology framenet verbnet"
+	@echo "                                 collocations wikidata osm-gb"
+	@echo "                                 treesitter standards"
 	@echo ""
 	@echo "  stats            summarise datasets/extracted/"
 	@echo "  verify           verify extracted manifest consistency"
@@ -78,14 +83,39 @@ extract:
 run:
 	$(UV_KE) knowledge-extractor run --tier 1
 
-# `make run-wordnet`, `make run-wikidata`, etc. — dispatches to a single dataset.
-# The pattern strips the `run-` prefix and guesses the category from the name.
-run-wordnet run-morphology run-framenet run-verbnet run-collocations: run-%:
-	$(UV_KE) knowledge-extractor run linguistics/$*
+# ----------------------------------------------------------------------
+# per-dataset phase targets
+# ----------------------------------------------------------------------
+#
+# One source of truth for the registered datasets. For each entry, we
+# generate three targets from the short name (the part after the slash):
+#
+#   make run-<name>       download + extract
+#   make download-<name>  just populate raw_dir
+#   make extract-<name>   just transform raw -> triples
+#
+# Example: for "knowledge/osm-gb" you get run-osm-gb, download-osm-gb,
+# and extract-osm-gb. Adding a new dataset is one line in DATASETS.
 
-run-wikidata: ; $(UV_KE) knowledge-extractor run knowledge/wikidata
-run-treesitter: ; $(UV_KE) knowledge-extractor run ast/treesitter
-run-standards: ; $(UV_KE) knowledge-extractor run domain/standards
+DATASETS := \
+	linguistics/wordnet \
+	linguistics/morphology \
+	linguistics/framenet \
+	linguistics/verbnet \
+	linguistics/collocations \
+	knowledge/wikidata \
+	knowledge/osm-gb \
+	ast/treesitter \
+	domain/standards
+
+define _phase_targets
+.PHONY: run-$(notdir $(1)) download-$(notdir $(1)) extract-$(notdir $(1))
+run-$(notdir $(1)):      ; $$(UV_KE) knowledge-extractor run $(1)
+download-$(notdir $(1)): ; $$(UV_KE) knowledge-extractor download $(1)
+extract-$(notdir $(1)):  ; $$(UV_KE) knowledge-extractor extract $(1)
+endef
+
+$(foreach d,$(DATASETS),$(eval $(call _phase_targets,$d)))
 
 .PHONY: stats
 stats:
@@ -122,9 +152,11 @@ tokenizer-test:
 # ----------------------------------------------------------------------
 
 .PHONY: test
-test: tokenizer-test
-	@# Python subprojects have no test suites yet; add pytest calls here
-	@# when tests/ directories are populated.
+test: tokenizer-test ke-test
+
+.PHONY: ke-test
+ke-test:
+	$(UV_KE) --extra dev --extra osm pytest $(KE)/tests/
 
 # ----------------------------------------------------------------------
 # clean

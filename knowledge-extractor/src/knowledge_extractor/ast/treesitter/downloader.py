@@ -11,6 +11,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import requests
+from tqdm import tqdm
 
 from ...base import BaseDownloader, DatasetMeta
 from ...io_utils import atomic_write_bytes
@@ -61,12 +62,17 @@ class TreeSitterDownloader(BaseDownloader):
         session = requests.Session()
         session.headers.update({"User-Agent": USER_AGENT})
 
-        for lang in languages_for_tier(max_tier):
-            grammar_ok = _fetch_file(
-                session, lang, "grammar.json", layout.grammar_path(lang.name)
-            )
-            node_ok = _fetch_file(
-                session, lang, "node-types.json", layout.node_types_path(lang.name)
-            )
-            if not (grammar_ok or node_ok):
-                print(f"[treesitter] {lang.name}: could not fetch grammar files")
+        langs = languages_for_tier(max_tier)
+        with tqdm(langs, desc="treesitter", unit="lang", leave=False) as bar:
+            for lang in bar:
+                bar.set_postfix_str(lang.name)
+                grammar_ok = _fetch_file(
+                    session, lang, "grammar.json", layout.grammar_path(lang.name)
+                )
+                node_ok = _fetch_file(
+                    session, lang, "node-types.json", layout.node_types_path(lang.name)
+                )
+                if not (grammar_ok or node_ok):
+                    bar.write(
+                        f"[treesitter] {lang.name}: could not fetch grammar files"
+                    )

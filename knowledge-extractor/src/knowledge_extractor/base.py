@@ -102,10 +102,11 @@ class _DatasetComponent(ABC):
     def meta(self) -> DatasetMeta: ...
 
     def raw_path(self, raw_dir: Path | str) -> Path:
+        """Return the per-dataset raw cache path. Pure — does NOT create the
+        directory. Callers that need to write into it should ``mkdir`` first
+        (the atomic write helpers in ``io_utils`` already do this for you)."""
         m = self.meta()
-        path = raw_path_for(raw_dir, m.category, m.name)
-        path.mkdir(parents=True, exist_ok=True)
-        return path
+        return raw_path_for(raw_dir, m.category, m.name)
 
 
 class BaseDownloader(_DatasetComponent):
@@ -154,12 +155,16 @@ class NLTKBackedDownloader(BaseDownloader):
     def download(self, raw_dir: Path) -> None:
         nltk_dir = setup_nltk_data_dir(raw_dir)
         import nltk  # type: ignore
+        from tqdm import tqdm
 
-        for pkg, path in type(self).NLTK_PACKAGES:
-            try:
-                nltk.data.find(path)
-            except LookupError:
-                nltk.download(pkg, download_dir=str(nltk_dir), quiet=True)
+        pkgs = type(self).NLTK_PACKAGES
+        with tqdm(pkgs, desc=self.meta().name, unit="pkg", leave=False) as bar:
+            for pkg, path in bar:
+                bar.set_postfix_str(pkg)
+                try:
+                    nltk.data.find(path)
+                except LookupError:
+                    nltk.download(pkg, download_dir=str(nltk_dir), quiet=True)
 
 
 class BaseExtractor(_DatasetComponent):
