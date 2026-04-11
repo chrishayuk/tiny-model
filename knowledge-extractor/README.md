@@ -1,10 +1,10 @@
 # knowledge-extractor
 
-Dataset-oriented triple extraction pipeline for the LARQL graph-to-weights
-compiler. One framework, pluggable extractors per dataset, one self-contained
-folder of JSON triples per dataset.
+Dataset-oriented triple extraction pipeline with a strict download / extract
+phase split. One framework, pluggable downloader + extractor per dataset,
+one self-contained folder of JSON triples per dataset.
 
-See [SPEC.md](./SPEC.md) for the v0.2 architecture, [ROADMAP.md](./ROADMAP.md)
+See [SPEC.md](./SPEC.md) for the v0.3 architecture, [ROADMAP.md](./ROADMAP.md)
 for what's shipping when, and [docs/datasets/](./docs/datasets/) for a
 per-dataset explanation of what each extractor produces.
 
@@ -23,7 +23,7 @@ tiny-model/                       # monorepo root — run commands from here
 │       ├── linguistics/framenet/
 │       └── domain/standards/
 │
-└── knowledge-extractor/              # this project — pure code
+└── knowledge-extractor/          # this project — pure code
     ├── src/knowledge_extractor/
     ├── configs/                  # tier{1,2,3}.yaml
     ├── docs/datasets/            # per-dataset documentation
@@ -37,50 +37,73 @@ the extractors.
 ## Install
 
 ```bash
-cd knowledge-extractor
-uv sync
+# from the monorepo root
+make setup
+```
+
+This syncs the `knowledge-extractor` and `benchmarks` Python venvs and
+builds the Rust tokenizer workspace. Just want this project?
+
+```bash
+cd knowledge-extractor && uv sync
 ```
 
 ## Try it in 30 seconds
 
 ```bash
-python3 knowledge-extractor/examples/run_demo.py
+# from the monorepo root
+make demo
 ```
 
 Runs the zero-dependency `domain/standards` extractor end-to-end, verifies
 the manifest, and prints sample pairs. Writes to
 `knowledge-extractor/examples/_demo_output/` (gitignored). See
-[`examples/`](./examples) for a trimmed snapshot of a real tier-1 run across
-wordnet, framenet, verbnet, and standards (1.2M triples before trimming).
+[`examples/`](./examples) for a trimmed snapshot of a real tier-1 run
+(1.2M triples before trimming).
 
 ## Usage
 
-Run from the monorepo root so relative paths resolve.
+The pipeline has three phases — `download`, `extract`, and `run` (which
+chains both). All commands expect to run from the monorepo root so that
+the default `datasets/{raw,extracted}/` paths resolve correctly.
+
+### Via the Makefile (recommended)
 
 ```bash
-# list what's registered
-uv run knowledge-extractor list
+make list                # registered datasets
+make run                 # download + extract, tier 1
+make download            # just the raw fetch
+make extract             # just the transform step
+make run-wordnet         # single dataset (also: morphology, framenet, verbnet,
+                         # collocations, wikidata, treesitter, standards)
+make stats               # summarise datasets/extracted/
+make verify              # check manifest consistency
+make coverage            # run the benchmarks sibling project
+make clean-datasets      # wipe datasets/{raw,extracted}/
+```
 
-# run a single dataset (writes to datasets/extracted/linguistics/wordnet/)
-uv run knowledge-extractor extract linguistics/wordnet
+Run `make` with no target for the full list.
 
-# run an entire tier
-uv run knowledge-extractor extract --tier 1
+### Via the CLI directly
 
-# run everything in a category
-uv run knowledge-extractor extract --category linguistics
+```bash
+# common case: download then extract
+uv run knowledge-extractor run linguistics/wordnet
 
-# config-driven run
-uv run knowledge-extractor extract --config knowledge-extractor/configs/tier1.yaml
+# phases separately (download once, extract many times with different filters)
+uv run knowledge-extractor download linguistics/wordnet
+uv run knowledge-extractor extract  linguistics/wordnet
+
+# tiers, categories, everything
+uv run knowledge-extractor run --tier 1
+uv run knowledge-extractor run --category linguistics
+uv run knowledge-extractor run --all
+uv run knowledge-extractor run --config configs/tier1.yaml
 
 # explicit paths
-uv run knowledge-extractor extract linguistics/wordnet \
+uv run knowledge-extractor run linguistics/wordnet \
     --output datasets/extracted/ \
     --raw-dir datasets/raw/
-
-# inspect output
-uv run knowledge-extractor stats datasets/extracted/
-uv run knowledge-extractor verify datasets/extracted/
 ```
 
 Override paths globally for scripted runs:
@@ -88,28 +111,33 @@ Override paths globally for scripted runs:
 ```bash
 KNOWLEDGE_EXTRACTED_DIR=/mnt/big-disk/extracted \
 KNOWLEDGE_RAW_DIR=/mnt/big-disk/raw \
-    uv run knowledge-extractor extract --tier 2
+    uv run knowledge-extractor run --tier 2
 ```
 
 ## Code layout
 
 ```
 src/knowledge_extractor/
-  base.py           BaseExtractor, RawTriple, DatasetMeta
+  base.py           BaseDownloader, BaseExtractor, NLTKBackedDownloader,
+                    RawLayout, NLTKRawLayout, RawTriple, DatasetMeta
   paths.py          dataset path resolution + NLTK redirection
+  io_utils.py       atomic_write_json / atomic_write_bytes
   normaliser.py     text cleaning (strict/permissive profiles)
   filter.py         quality filter + optional tokeniser coverage
   tokeniser_check.py  HF tokeniser wrapper, cached
   writer.py         atomic JSON writer + dedup
   manifest.py       stats / verification
-  runner.py         PipelineRunner — the orchestrator
-  registry.py       lazy EXTRACTORS dict + TIERS
+  runner.py         PipelineRunner — orchestrates download + extract phases
+  registry.py       lazy DATASETS dict + TIERS
   cli.py            argparse entry point
-  linguistics/      wordnet, framenet, verbnet, morphology
-  ast/              tree-sitter (planned)
-  knowledge/        wikidata, dbpedia, geonames, ... (planned)
-  domain/           standards, stackoverflow, api_docs, ... (in progress)
+  linguistics/      wordnet, framenet, verbnet, morphology, collocations
+  ast/              treesitter (77 languages)
+  knowledge/        wikidata
+  domain/           standards (more planned)
 ```
+
+Every dataset is a folder with `__init__.py`, `model.py` (pydantic
+`RawLayout` + `DatasetMeta`), `downloader.py`, and `extractor.py`.
 
 ## Currently registered
 
@@ -117,13 +145,18 @@ src/knowledge_extractor/
   meronyms/holonyms, antonyms, troponyms, entailments, causes, similar_to,
   pertainyms, derivations, domain_{topic,region,usage})
 - `linguistics/framenet` — evokes_frame, frame_lexicon, frame_element, frame_parent
-- `linguistics/verbnet` — member_of_class, has_role, has_frame
+- `linguistics/verbnet` — member_of_class, has_role, has_frame, selrestr_{pos,neg}
 - `linguistics/morphology` — plurals, verb tenses, comparative/superlative,
-  agent_noun, nominalization
+  adverb_form, negation_prefix, agent_noun, nominalization
+- `linguistics/collocations` — bigram_pmi, adjective_noun, verb_object (Brown)
+- `knowledge/wikidata` — 44 curated SPARQL properties across geography,
+  people, culture, organisations, science, politics, sport
+- `ast/treesitter` — 77 languages across 3 tiers; keyword_begins, contains,
+  is_a, followed_by, delimiter_role (subjects are `<lang>/<symbol>`-scoped)
 - `domain/standards` — http_status, http_method, dns_record, tcp_port,
   udp_port, mime_type, tls_version
 
-Adding a new extractor is a ~50 line file — see section 7 of
+Adding a new extractor is a ~50 line folder — see section 9 of
 [SPEC.md](./SPEC.md) and [docs/datasets/](./docs/datasets/) for examples.
 
 ## Output shape

@@ -4,6 +4,11 @@ version = "0.1.0"
 description = "Benchmark coverage analysis over extracted triple datasets"
 readme = "SPEC.md"
 requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+]
 dependencies = [
     "tqdm>=4.66",
 ]

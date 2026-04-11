@@ -155,7 +155,7 @@ sp = spm.SentencePieceProcessor(model_file="./v11/artifacts/v11.model")
 Publishing to HuggingFace Hub:
 
 ```bash
-huggingface-cli upload chrishayuk/v11-tokenizer ./v11/artifacts/
+huggingface-cli upload <org>/v11-tokenizer ./v11/artifacts/
 ```
 
 ## 8. CLI usage
@@ -197,5 +197,5 @@ Before accepting a v11 build as "shipped":
 2. `cargo run -p v11-builder -- --config v11/config.json --output v11/artifacts/`
 3. `cargo test` — all v11 crates pass
 4. `cargo run -p v11-bench` — performance sanity check
-5. `huggingface-cli upload chrishayuk/v11-tokenizer ./v11/artifacts/`
+5. `huggingface-cli upload <org>/v11-tokenizer ./v11/artifacts/`
 6. `cargo publish -p v11-core -p v11-cli` (builder keeps as internal)

@@ -18,9 +18,10 @@ datasets:
   - linguistics/morphology
   - linguistics/framenet
   - linguistics/verbnet
+  - linguistics/collocations
+  - ast/treesitter
+  - knowledge/wikidata
   - domain/standards
-  # - ast
-  # - knowledge/wikidata
   # - domain/api_docs
   # - domain/cli
   # - domain/errors

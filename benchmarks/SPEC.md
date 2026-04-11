@@ -1,8 +1,14 @@
-# LARQL Benchmark Coverage Analysis
+# Benchmark Coverage Analysis
 
 **Spec v0.1 — What Do We Already Cover?**
 
-Chris Hay | LARQL Project | April 2026
+April 2026
+
+> **Note:** This document predates the v0.3 rename and folder reorg of
+> `knowledge-extractor`. Path references below (e.g. `larql-knowledge/`,
+> `data/`) reflect the legacy layout — the current consumer reads from
+> `../datasets/extracted/`. Update opportunistically when rewriting a
+> section; the design rationale is still accurate.
 
 ---
 
@@ -406,7 +412,7 @@ def classify_gap(question: dict) -> str:
 
 ```
 ═══════════════════════════════════════════════════════
-  LARQL Benchmark Coverage Analysis
+  Benchmark Coverage Analysis
 ═══════════════════════════════════════════════════════
 
   Current data: 1,155,886 pairs across 3 downloaders

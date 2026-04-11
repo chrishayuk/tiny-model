@@ -55,7 +55,7 @@ The snapshot does not include `linguistics/morphology` because the host env
 where it was generated had a broken spacy/numpy binary. Re-run to add it:
 
 ```bash
-python3 -m knowledge_extractor.cli extract linguistics/morphology \
+python3 -m knowledge_extractor.cli run linguistics/morphology \
     --output knowledge-extractor/examples/sample_output/
 ```
 
@@ -65,7 +65,7 @@ Run from the monorepo root. Output lands in `datasets/extracted/`, raw
 downloads in `datasets/raw/` (NLTK corpora included).
 
 ```bash
-python3 -m knowledge_extractor.cli extract --tier 1
+python3 -m knowledge_extractor.cli run --tier 1
 ```
 
 Expect ~1.2M triples, a few minutes on first run (NLTK data download), and

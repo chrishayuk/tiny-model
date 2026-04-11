@@ -1,4 +1,4 @@
-"""LARQL Benchmark Coverage Analysis — v0.1.
+"""Benchmark Coverage Analysis — v0.1.
 
 Measures how many benchmark questions the current compiled-data tree
 (data/linguistic, data/ast, data/knowledge) can already answer via direct
@@ -526,7 +526,7 @@ def render_dashboard(index: GraphIndex, reports: dict) -> str:
     lines = []
     bar = "=" * 72
     lines.append(bar)
-    lines.append("  LARQL Benchmark Coverage Analysis")
+    lines.append("  Benchmark Coverage Analysis")
     lines.append(bar)
     lines.append("")
     lines.append(

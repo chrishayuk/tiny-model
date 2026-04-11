@@ -9,22 +9,19 @@ endpoint can cut off large streamed replies).
 from __future__ import annotations
 
 import json
-import os
-import tempfile
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
 
 import requests
 
 from ...base import BaseDownloader, DatasetMeta
+from ...io_utils import atomic_write_json
 from .model import (
     META,
     PROPERTIES,
     SPARQL_ENDPOINT,
     USER_AGENT,
-    WikidataProperty,
     WikidataPropertyDump,
     WikidataRawLayout,
 )
@@ -35,21 +32,6 @@ DEFAULT_LABEL_MAX = 25
 REQUEST_TIMEOUT = 120
 RETRY_BACKOFFS = (5, 15, 45)
 DEFAULT_SLEEP_BETWEEN = 1.0
-
-
-def _atomic_write_json(path: Path, payload: Any) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, tmp_name = tempfile.mkstemp(
-        prefix=path.name + ".", suffix=".tmp", dir=str(path.parent)
-    )
-    try:
-        with os.fdopen(fd, "w") as fh:
-            json.dump(payload, fh, indent=2, ensure_ascii=False)
-        os.replace(tmp_name, path)
-    except Exception:
-        if os.path.exists(tmp_name):
-            os.unlink(tmp_name)
-        raise
 
 
 def _build_query(pid: str, limit: int, label_max: int) -> str:
@@ -147,5 +129,6 @@ class WikidataDownloader(BaseDownloader):
                 downloaded_at=datetime.now(timezone.utc).isoformat(),
                 bindings=bindings,
             )
-            _atomic_write_json(target, dump.model_dump())
+            atomic_write_json(target, dump.model_dump())
+            # Politeness sleep only on successful fetch, not on cache skip.
             time.sleep(DEFAULT_SLEEP_BETWEEN)

@@ -8,16 +8,14 @@ only state we track.
 
 from __future__ import annotations
 
-import os
-import tempfile
 from pathlib import Path
 
 import requests
 
 from ...base import BaseDownloader, DatasetMeta
+from ...io_utils import atomic_write_bytes
 from .model import (
     BRANCHES,
-    GRAMMAR_FILES,
     META,
     RAW_URL,
     TreeSitterLanguage,
@@ -27,22 +25,7 @@ from .model import (
 
 
 REQUEST_TIMEOUT = 30
-USER_AGENT = "larql-ast-downloader/0.3"
-
-
-def _atomic_write_bytes(path: Path, data: bytes) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, tmp_name = tempfile.mkstemp(
-        prefix=path.name + ".", suffix=".tmp", dir=str(path.parent)
-    )
-    try:
-        with os.fdopen(fd, "wb") as fh:
-            fh.write(data)
-        os.replace(tmp_name, path)
-    except Exception:
-        if os.path.exists(tmp_name):
-            os.unlink(tmp_name)
-        raise
+USER_AGENT = "knowledge-extractor-ast/0.3"
 
 
 def _fetch_file(
@@ -61,7 +44,7 @@ def _fetch_file(
         except Exception:
             continue
         if r.status_code == 200:
-            _atomic_write_bytes(target, r.content)
+            atomic_write_bytes(target, r.content)
             return True
     return False
 

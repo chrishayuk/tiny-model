@@ -8,7 +8,7 @@ in the extractor source file and is trivially editable.
 Why a hand-curated dataset at all? Because these mappings are small, stable,
 authoritative, and the alternative (scraping RFCs or the IANA registry CSVs)
 is more maintenance for the same data. Add rows to the tables in
-`src/knowledge_extractor/domain/standards.py` when you need more coverage.
+`src/knowledge_extractor/domain/standards/model.py` when you need more coverage.
 
 - **Upstream**: IANA registries (https://www.iana.org/), RFC 7231, RFC 2616, RFC 1035, etc.
 - **Licence**: public domain (facts), extractor code MIT
@@ -60,7 +60,8 @@ script uses as a smoke test.
 
 To add a new table:
 
-1. Define it as a `dict[str, str]` at module top:
+1. Define it as a `dict[str, str]` at the top of
+   `src/knowledge_extractor/domain/standards/model.py`:
    ```python
    WEBSOCKET_CLOSE_CODES = {
        "1000": "normal closure",
@@ -68,14 +69,14 @@ To add a new table:
        # ...
    }
    ```
-2. Append it to the `tables` list in `RFCExtractor.extract()`:
+2. Append it to the `TABLES` list in the same file:
    ```python
-   tables = [
+   TABLES = [
        ...,
        ("websocket_close", WEBSOCKET_CLOSE_CODES),
    ]
    ```
-3. Re-run: `python3 -m knowledge_extractor.cli extract domain/standards`
+3. Re-run: `python3 -m knowledge_extractor.cli run domain/standards`
 
 That's it. The pipeline handles normalisation, dedup, manifest, and output.
 

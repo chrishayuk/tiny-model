@@ -1,9 +1,14 @@
 [project]
 name = "knowledge-extractor"
-version = "0.2.0"
-description = "Dataset-oriented triple extraction pipeline for LARQL"
+version = "0.3.0"
+description = "Dataset-oriented triple extraction pipeline with split download and extract phases"
 readme = "README.md"
 requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+]
 dependencies = [
     "lemminflect>=0.2.3",
     "nltk>=3.9",

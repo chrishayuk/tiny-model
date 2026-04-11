@@ -2,7 +2,7 @@
 
 **Spec v0.3 — Download/Extract Phase Split**
 
-Chris Hay | April 2026
+April 2026
 
 ---
 

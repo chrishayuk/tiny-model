@@ -25,9 +25,6 @@ from ...paths import default_raw_dir
 from .model import META, TreeSitterLanguage, TreeSitterRawLayout, languages_for_tier
 
 
-# ---- Grammar walkers (ported verbatim from legacy download_ast_data.py) --
-
-
 def _walk_rule(node: Any, visit) -> None:
     if not isinstance(node, dict):
         return
@@ -136,9 +133,6 @@ def _extract_from_grammar(
         _walk_rule(rule_body, visit)
 
     return keywords, sequences, delimiters
-
-
-# ---- Extractor ------------------------------------------------------------
 
 
 def _read_json(path: Path) -> Any | None:

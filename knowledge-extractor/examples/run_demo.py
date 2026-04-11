@@ -12,7 +12,7 @@ per-relation JSON files + manifest. Use it to sanity-check an install.
 The demo writes to a scratch directory under examples/ (gitignored), so
 it never touches your real datasets/extracted/ tree. For a real run:
 
-    python3 -m knowledge_extractor.cli extract linguistics/wordnet
+    python3 -m knowledge_extractor.cli run linguistics/wordnet
 """
 
 from __future__ import annotations
@@ -27,7 +27,7 @@ MONOREPO_ROOT = PROJECT_ROOT.parent                     # tiny-model/
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
 from knowledge_extractor.manifest import summarise, verify  # noqa: E402
-from knowledge_extractor.registry import instantiate  # noqa: E402
+from knowledge_extractor.registry import instantiate_extractors  # noqa: E402
 from knowledge_extractor.runner import PipelineRunner  # noqa: E402
 
 
@@ -40,7 +40,7 @@ def main() -> int:
     print("1. running extractor: domain/standards")
     print("-" * 60)
     runner = PipelineRunner({"output_dir": str(output_dir), "raw_dir": str(raw_dir)})
-    runner.run_all(instantiate(["domain/standards"]))
+    runner.run_all(instantiate_extractors(["domain/standards"]))
 
     print("\n2. verifying manifest consistency")
     print("-" * 60)

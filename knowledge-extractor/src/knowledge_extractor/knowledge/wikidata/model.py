@@ -28,7 +28,7 @@ META = DatasetMeta(
 
 
 SPARQL_ENDPOINT = "https://query.wikidata.org/sparql"
-USER_AGENT = "knowledge-extractor-downloader/0.3 (https://github.com/chrishayuk/larql)"
+USER_AGENT = "knowledge-extractor/0.3"
 
 
 class WikidataProperty(BaseModel):
