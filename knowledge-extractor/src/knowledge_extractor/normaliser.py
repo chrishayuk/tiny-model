@@ -18,7 +18,7 @@ from .base import RawTriple
 
 
 _STRICT_ALLOWED = {" ", "-", "'"}
-_PERMISSIVE_ALLOWED = {" ", "-", "'", ".", "_", "/", "+", ":"}
+_PERMISSIVE_ALLOWED = {" ", "-", "'", ".", "_", "/", "+", ":", ","}
 
 
 def _clean(text: str, allowed: set[str], allow_digits: bool) -> str | None:

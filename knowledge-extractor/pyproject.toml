@@ -25,6 +25,8 @@ ast = ["tree-sitter>=0.23", "tree-sitter-language-pack>=0.3"]
 # pyosmium publishes as `osmium` on PyPI. Binary wheels are available for
 # mainstream platforms; source builds need libosmium/expat/zlib headers.
 osm = ["osmium>=3.7"]
+# Natural Earth ships as shapefile bundles. pyshp is pure Python, no deps.
+natural-earth = ["pyshp>=2.3"]
 tokeniser = ["transformers>=4.40"]
 dev = ["pytest>=8.0"]
 

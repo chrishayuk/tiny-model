@@ -27,6 +27,8 @@ Index:
 ## Knowledge (L14-27, knowledge band)
 
 - `knowledge/wikidata` — 44 curated SPARQL properties across geography, people, culture, organisations, science, politics, and sport (doc TODO)
+- [countries](./knowledge-countries.md) — ISO 3166 + UN reference: codes, capitals, regions, currencies, calling codes, TLDs, languages, UN membership
+- [natural-earth](./knowledge-natural-earth.md) — sovereignty chains + admin-1 subdivisions from Natural Earth 10m shapefiles
 - [osm-gb](./knowledge-osm-gb.md) — OpenStreetMap GB extract: named amenities, shops, tourism, historic, leisure, and natural features with per-instance geometry
 
 ## Domain (L14-27, knowledge band)

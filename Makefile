@@ -32,8 +32,9 @@ help:
 	@echo "  download-NAME    download a single dataset (no extract)"
 	@echo "  extract-NAME     extract a single dataset (assumes raw present)"
 	@echo "                   valid names:  wordnet morphology framenet verbnet"
-	@echo "                                 collocations wikidata osm-gb"
-	@echo "                                 treesitter standards"
+	@echo "                                 collocations wikidata countries"
+	@echo "                                 natural-earth osm-gb treesitter"
+	@echo "                                 standards"
 	@echo ""
 	@echo "  stats            summarise datasets/extracted/"
 	@echo "  verify           verify extracted manifest consistency"
@@ -104,6 +105,8 @@ DATASETS := \
 	linguistics/verbnet \
 	linguistics/collocations \
 	knowledge/wikidata \
+	knowledge/countries \
+	knowledge/natural-earth \
 	knowledge/osm-gb \
 	ast/treesitter \
 	domain/standards
@@ -156,7 +159,7 @@ test: tokenizer-test ke-test
 
 .PHONY: ke-test
 ke-test:
-	$(UV_KE) --extra dev --extra osm pytest $(KE)/tests/
+	$(UV_KE) --extra dev --extra osm --extra natural-earth pytest $(KE)/tests/
 
 # ----------------------------------------------------------------------
 # clean

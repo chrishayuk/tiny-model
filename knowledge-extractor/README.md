@@ -158,6 +158,13 @@ Every dataset is a folder with `__init__.py`, `model.py` (pydantic
 - `linguistics/collocations` — bigram_pmi, adjective_noun, verb_object (Brown)
 - `knowledge/wikidata` — 44 curated SPARQL properties across geography,
   people, culture, organisations, science, politics, sport
+- `knowledge/countries` — ISO 3166 + UN reference: 70 countries × 13
+  relations (codes, capital, continent, region, subregion, currency,
+  calling_code, tld, official_language, un_member). Hand-curated, zero deps
+- `knowledge/natural-earth` — sovereignty chains + admin-1 subdivisions
+  from Natural Earth 10m shapefiles (~20 MB). 258 countries/dependencies,
+  4500 subnational regions, 45 real sovereignty chains (French Guiana→France,
+  Greenland→Denmark, Hong Kong→China, ...), plus economy/income classifications
 - `knowledge/osm-gb` — OpenStreetMap GB extract: named amenities, shops,
   tourism, historic sites, leisure, natural features; is_a, located_in,
   has_cuisine, has_brand, wikidata_id (ODbL licence, optional `osm` extra)

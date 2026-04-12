@@ -50,13 +50,16 @@ def test_tier_1_contents():
         "linguistics/collocations",
         "ast/treesitter",
         "knowledge/wikidata",
+        "knowledge/countries",
         "domain/standards",
     }
     assert set(TIERS[1]) == expected
 
 
-def test_tier_2_contains_osm_gb():
+def test_tier_2_contents():
+    """Spatial-cluster progress: osm-gb was first, natural-earth is second."""
     assert "knowledge/osm-gb" in TIERS[2]
+    assert "knowledge/natural-earth" in TIERS[2]
 
 
 def test_unknown_key_raises():
