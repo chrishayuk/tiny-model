@@ -42,3 +42,8 @@ build/
 .idea/
 .vscode/
 .claude/
+
+# artifacts
+artifacts/
+safetensors/
+vindex/
