@@ -15,7 +15,9 @@ Writes into `<repo>/model/v11/artifacts/`:
 Dependencies:
   - tiny_model_v11 (sibling v11-core package)
   - sentencepiece, torch, datasets
-  - tokenizer/v11/artifacts/v11.model (the v11 SP tokenizer)
+  - ../../../v-tokenizers/v11/artifacts/v11.model (sibling repo; NOTE this
+    exact file has never actually lived in either repo, see V11_TOKENIZER
+    comment below for the real location)
 
 Usage (from tiny-model repo root):
   uv run --project model/v11-train python model/v11-train/train_tinystories.py
@@ -40,7 +42,15 @@ from tiny_model_v11 import TinyModel, load_config
 # ── Paths ─────────────────────────────────────────────────────────────
 REPO = Path(__file__).resolve().parents[2]  # tiny-model/
 V11_ARTIFACT_DIR = REPO / "model" / "v11"
-V11_TOKENIZER = REPO / "tokenizer" / "v11" / "artifacts" / "v11.model"
+# v11 moved 2026-07-19 into the sibling v-tokenizers repo. NOTE: this path
+# was already stale before the move -- no v11.model (native SentencePiece
+# format) has ever actually lived under tokenizer/v11/artifacts/ in this
+# repo (only tokenizer.json/v11.vocab.bin/v11.vocab.json, the HF-exported
+# forms). The real v11.model lives in a third repo entirely:
+# chris-experiments/compilation/15_v11_model/v11_tokenizer/v11.model
+# (sha256 4ffbfc87...c1dc8e6) -- pass --tokenizer explicitly pointing
+# there if this script needs to actually run.
+V11_TOKENIZER = REPO.parent / "v-tokenizers" / "v11" / "artifacts" / "v11.model"
 OUTPUT_DIR = V11_ARTIFACT_DIR / "artifacts"
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 

@@ -47,13 +47,3 @@ build/
 artifacts/
 safetensors/
 vindex/
-
-# v12 tokenizer: generated corpora / trained candidates / eval output —
-# tracked as real artifacts in the chuk-experiments server instead, not
-# in git history. Scripts, pins, manifests, and README stay tracked.
-tokenizer/v12/corpus/c8_corpus_v0.jsonl
-tokenizer/v12/corpus/c8_corpus_v0.txt
-tokenizer/v12/corpus/c8_code_corpus.jsonl
-tokenizer/v12/training/candidates/
-tokenizer/v12/training/candidates.jsonl
-tokenizer/v12/bench/reports/

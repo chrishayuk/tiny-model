@@ -6,7 +6,7 @@ Produces a directory consumable by `larql extract-index`:
     <output>/
       model.safetensors     # native TinyModel keys (no remap)
       config.json           # model_type="tinymodel" + arch fields
-      tokenizer.json        # copied from ../../../tokenizer/v11/artifacts/
+      tokenizer.json        # copied from ../../../v-tokenizers/v11/artifacts/ (sibling repo)
 
 Native key layout is matched directly by `TinyModelArch` in
 `larql-models/src/architectures/tinymodel.rs` — no tensor renaming.
@@ -82,7 +82,7 @@ def main():
                     help="Destination HF-safetensors directory")
     ap.add_argument("--tokenizer",
                     default=None,
-                    help="Path to tokenizer.json (default: <repo>/tokenizer/v11/artifacts/tokenizer.json)")
+                    help="Path to tokenizer.json (default: <chris-source>/v-tokenizers/v11/artifacts/tokenizer.json, a sibling repo)")
     args = ap.parse_args()
 
     artifact_dir = args.artifact_dir.resolve()
@@ -115,8 +115,12 @@ def main():
     if args.tokenizer is not None:
         tok_src = Path(args.tokenizer)
     else:
-        repo_root = artifact_dir.parents[1]  # <tiny-model>/
-        tok_src = repo_root / "tokenizer" / "v11" / "artifacts" / "tokenizer.json"
+        # v11 moved 2026-07-19 into the sibling v-tokenizers repo (was
+        # <tiny-model>/tokenizer/v11/). Assumes v-tokenizers is checked
+        # out as a sibling of tiny-model, per the local path-dependency
+        # convention used across this repo.
+        chris_source = Path(__file__).resolve().parents[3]
+        tok_src = chris_source / "v-tokenizers" / "v11" / "artifacts" / "tokenizer.json"
     if tok_src.exists():
         tok_dst = output / "tokenizer.json"
         print(f"[copy] {tok_src} → {tok_dst}")

@@ -30,7 +30,9 @@ model, config = load_from_artifacts("/path/to/tiny-model/model/v11")
 
 - Architecture: TinyModel (v11-core) — dim=512, 20L, 8H, 4KV, ffn=2048.
 - Tokenizer: v11 SentencePiece, 71,261 vocab (WordNet + Wikidata + 77
-  tree-sitter grammars + language_extras). Lives in `../../tokenizer/v11/`.
+  tree-sitter grammars + language_extras). Moved 2026-07-19 into the
+  sibling `v-tokenizers` repo (`../../../v-tokenizers/v11/`), out of
+  tiny-model.
 - Corpus: TinyStories, 16M tokens Phase 2 + 8M Phase 3.
 - Variants: `v11a`, `v11b`, … land as siblings (same core, different
   weights).
