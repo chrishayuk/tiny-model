@@ -47,3 +47,9 @@ build/
 artifacts/
 safetensors/
 vindex/
+
+# v11 pinned-revision replication checkpoints (~330-460MB each) -- same
+# reasoning as v-tokenizers/v12/training/tok2_runs: tracked as real
+# artifacts elsewhere, not git history. Small JSON/log results stay
+# tracked.
+model/v11/artifacts_pinned_replication/*.pt

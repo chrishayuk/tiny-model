@@ -50,6 +50,7 @@ from train_tok2 import (
     HUB_SHA,
     V_TOKENIZERS,
     V11_ARTIFACT_DIR,
+    V11_REFERENCE_BYTES_PHASE3,
     HFWrappedTokenizer,
     NativeSPTokenizer,
     load_tokenizer,
@@ -66,13 +67,21 @@ MAX_SEQ = 256
 TRAINING_CONSUMPTION_BYTES = 53_727_676
 TRAINING_SEED = 42
 TRAINING_BUFFER_SIZE = 10000
+# v11 replication's phase3 (train_v11_replication.py) consumes a SEPARATE
+# seed=43 stream -- TOKENS_PHASE3=8,000,000 tokens converted to bytes via
+# v11's own real compression, same conversion train_tok2.py uses for
+# V11_REFERENCE_BYTES_PHASE3. Must also be excluded for
+# model_compiled.pt's held-out set to be verified clean, not just
+# model_full.pt's.
+PHASE3_SEED = TRAINING_SEED + 1
+PHASE3_CONSUMPTION_BYTES = round(V11_REFERENCE_BYTES_PHASE3)
 
 
 def compute_training_consumed_hashes():
     """The exact sha256 hashes of every document the seed=42 stream yields
     up to the shared byte budget -- i.e. what every v12 phase1 candidate
-    actually trained on, regardless of how many TOKENS that byte count
-    happened to produce for each one."""
+    (and v11 replication's phase1) actually trained on, regardless of how
+    many TOKENS that byte count happened to produce for each one."""
     from datasets import load_dataset
     ds = load_dataset("roneneldan/TinyStories", split="train", streaming=True, revision=HUB_SHA)
     ds = ds.shuffle(seed=TRAINING_SEED, buffer_size=TRAINING_BUFFER_SIZE)
@@ -86,10 +95,38 @@ def compute_training_consumed_hashes():
             break
     return hashes
 
+
+def compute_phase3_consumed_hashes():
+    """The exact sha256 hashes of every document the seed=43 stream yields
+    up to v11 replication's phase3 byte budget -- what
+    model_compiled.pt's frozen-FFN retrain actually consumed."""
+    from datasets import load_dataset
+    ds = load_dataset("roneneldan/TinyStories", split="train", streaming=True, revision=HUB_SHA)
+    ds = ds.shuffle(seed=PHASE3_SEED, buffer_size=TRAINING_BUFFER_SIZE)
+    hashes = set()
+    cum_bytes = 0
+    for ex in ds:
+        b = ex["text"].encode("utf-8")
+        cum_bytes += len(b)
+        hashes.add(hashlib.sha256(b).hexdigest())
+        if cum_bytes >= PHASE3_CONSUMPTION_BYTES:
+            break
+    return hashes
+
 CHECKPOINTS = {
     "v11": {
         "candidate": "v11",
         "path": V11_ARTIFACT_DIR / "artifacts" / "model_full.pt",
+        "vocab_size": 71261,
+    },
+    "v11_pinned_replication_full": {
+        "candidate": "v11",
+        "path": V11_ARTIFACT_DIR / "artifacts_pinned_replication" / "model_full.pt",
+        "vocab_size": 71261,
+    },
+    "v11_pinned_replication_compiled": {
+        "candidate": "v11",
+        "path": V11_ARTIFACT_DIR / "artifacts_pinned_replication" / "model_compiled.pt",
         "vocab_size": 71261,
     },
     "bpe_sp_16000_v1_tcoreseed_bytefallback": {
@@ -112,8 +149,17 @@ CHECKPOINTS = {
 
 def load_held_out_texts():
     print("Computing exact training-consumed document hashes (seed=42, byte-matched boundary)...")
-    consumed = compute_training_consumed_hashes()
-    print(f"  {len(consumed):,} documents actually consumed by the shared byte-matched phase1 budget")
+    consumed_phase1 = compute_training_consumed_hashes()
+    print(f"  {len(consumed_phase1):,} documents actually consumed by the shared byte-matched phase1 budget")
+
+    print("Computing exact training-consumed document hashes (seed=43, v11 replication phase3 boundary)...")
+    consumed_phase3 = compute_phase3_consumed_hashes()
+    print(f"  {len(consumed_phase3):,} documents actually consumed by v11 replication's phase3 budget")
+
+    consumed = consumed_phase1 | consumed_phase3
+    overlap = len(consumed_phase1) + len(consumed_phase3) - len(consumed)
+    print(f"  {len(consumed):,} unique documents consumed across both phases "
+          f"({overlap} hashes appeared in both streams)")
 
     from datasets import load_dataset
     ds = load_dataset("roneneldan/TinyStories", split="train", streaming=True, revision=HUB_SHA)
@@ -129,7 +175,7 @@ def load_held_out_texts():
             continue
         texts.append(ex["text"])
     print(f"  skipped {skipped} seed=777 documents that were also in the training-consumed set "
-          f"(this is the real, measured contamination the earlier version of this script missed)")
+          f"(phase1 seed=42 or v11-replication phase3 seed=43)")
     return texts
 
 
@@ -187,13 +233,15 @@ def main():
     config = load_config(V11_ARTIFACT_DIR)
 
     print(f"Held-out set: up to {N_HELD_OUT_STORIES} TinyStories, seed={HELD_OUT_SEED}, "
-          f"VERIFIED excluded from the seed=42/byte-matched training-consumed set")
-    print("NOTE -- v11 caveat: this exclusion is verified against the v12 candidates' training "
-          "consumption (pinned hub_sha, seed=42, byte-matched budget, fully reproducible). v11's "
-          "ORIGINAL training (train_tinystories.py) never pinned a dataset revision, so its exact "
-          "training-time document set cannot be reconstructed from today's hub state -- v11's "
-          "held-out cleanliness here is NOT independently verified, only assumed. A v11 replication "
-          "under this same pinned-revision harness is needed to close that gap.\n")
+          f"VERIFIED excluded from the seed=42 (phase1) AND seed=43 (v11-replication phase3) "
+          f"training-consumed sets")
+    print("NOTE -- v11 (original, unpinned) caveat still applies to the 'v11' checkpoint only: "
+          "train_tinystories.py never pinned a dataset revision, so ITS exact training-time "
+          "document set cannot be reconstructed from today's hub state -- 'v11' held-out "
+          "cleanliness is NOT independently verified, only assumed. "
+          "'v11_pinned_replication_full'/'v11_pinned_replication_compiled' ARE independently "
+          "verified clean (pinned hub_sha, seeds 42+43, fully reproducible) -- see "
+          "train_v11_replication.py.\n")
     texts = load_held_out_texts()
     total_bytes = sum(len(t.encode("utf-8")) for t in texts)
     print(f"  {len(texts)} verified-clean stories, {total_bytes:,} bytes\n")
@@ -214,11 +262,15 @@ def main():
             "n_stories": len(texts),
             "total_bytes": total_bytes,
             "verified_excluded_from_v12_training_consumption": True,
-            "v11_cleanliness_verified": False,
-            "v11_caveat": "v11's original training never pinned a dataset revision; its exact "
-                           "training-time document set can't be reconstructed, so this held-out "
-                           "set's disjointness from v11's actual training data is NOT verified, "
-                           "only assumed. Needs a v11 replication under this pinned-revision harness.",
+            "verified_excluded_from_v11_replication_phase3_consumption": True,
+            "v11_original_cleanliness_verified": False,
+            "v11_original_caveat": "the 'v11' checkpoint's original training never pinned a "
+                           "dataset revision; its exact training-time document set can't be "
+                           "reconstructed, so this held-out set's disjointness from v11's ACTUAL "
+                           "training data is NOT verified, only assumed. See "
+                           "'v11_pinned_replication_full'/'_compiled' for the verified-clean "
+                           "replication under this same pinned-revision harness.",
+            "v11_pinned_replication_cleanliness_verified": True,
             "results": results,
         }, f, indent=2)
     print(f"saved {out_path}")
