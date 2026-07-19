@@ -1,0 +1,31 @@
+{
+  "loss_full": 2.1710,
+  "loss_full_note": "last logged progress checkpoint (16.0M/16.0M tokens, the n_batches%200==0 print), not the literal final train()-return value -- the process was intentionally killed right after model_full.pt saved (by design, to stop before phase3) and the final 'Done:'/'saved' print lines were still sitting in Python's buffered stdout when it was killed, so they never reached the log file. The saved checkpoint itself (model_full.pt) is complete and unaffected -- torch.save() is a separate, already-flushed file write, confirmed by file size/timestamp. The true final avg_loss differs from 2.1710 by at most the last <200-batch partial-checkpoint remainder, i.e. negligible (<0.1% relative).",
+  "loss_compiled": null,
+  "phase3_status": "deferred_intentionally",
+  "phase3_note": "Phase 3 (frozen-FFN retrain, 8M tokens, seed=43) was intentionally NOT run in this session -- stopped by explicit request right after phase1's model_full.pt saved, to write up phase1 results now and resume phase3 another day. train_v11_replication.py is unchanged and can be re-run (or extended to resume) to produce model_compiled.pt later.",
+  "tokenizer": "/Users/christopherhay/chris-source/chris-experiments/compilation/15_v11_model/v11_tokenizer/v11.model",
+  "vocab_size": 71261,
+  "n_params": 115149824,
+  "tokens_phase1": 16000000,
+  "tokens_phase3_target": 8000000,
+  "hub_sha": "f54c09fd23315a6f9c86f9dc80f725de7d8f9c64",
+  "seed_phase1": 42,
+  "seed_phase3": 43,
+  "arch": {
+    "dim": 512,
+    "n_layers": 20,
+    "ffn_dim": 2048,
+    "n_heads": 8,
+    "n_kv_heads": 4,
+    "max_seq": 256,
+    "lr": 0.0003
+  },
+  "note": "pinned-revision replication of v11's original training methodology (train_tinystories.py) -- same arch/tokenizer/budget/seeds, only revision=HUB_SHA added, so training-consumed documents are fully reproducible and hash-checkable against the frozen held-out set. See eval_held_out.py's 'v11_pinned_replication_full' entry for the verified-clean held-out BPB, which is the real decision-quality comparison metric -- not this training-loop loss.",
+  "comparison_to_original_unpinned_v11": {
+    "original_loss_full": 2.1659986819839476,
+    "this_run_loss_full": 2.1710,
+    "relative_difference_pct": 0.23,
+    "interpretation": "pinning the dataset revision did not materially change phase1 training loss -- consistent with the pin only fixing which exact hub snapshot is streamed, not changing the sampling methodology itself."
+  }
+}
