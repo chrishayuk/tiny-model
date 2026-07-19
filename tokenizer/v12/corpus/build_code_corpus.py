@@ -13,13 +13,13 @@ Deliberately small (a few hundred KB) relative to the prose/math domains —
 a v0 seed, not a comprehensive code corpus. Every file's content and sha256
 are recorded so the corpus is exactly reproducible and auditable.
 
-Run: python3 tokenizer/v12/build_code_corpus.py
+Run: python3 tokenizer/v12/corpus/build_code_corpus.py
 """
 import hashlib
 import json
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parent.parent.parent  # tiny-model/
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent  # tiny-model/
 
 EXTENSIONS = {".py": "python", ".rs": "rust", ".c": "c", ".go": "go",
               ".java": "java", ".js": "javascript", ".ts": "typescript", ".tsx": "typescript"}

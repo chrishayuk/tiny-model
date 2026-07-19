@@ -62,10 +62,10 @@ commitments:
       caveat: "built for the CN-7/CN-8 cell-native-architectures experiments, not originally for v12 tokenizer training — reused here as real, honestly-sourced math+structured text, not purpose-built for C8"
     domain_code:
       status: "did not exist anywhere (checked cell80 + tiny-model datasets/ + AST-metadata dirs) -- built fresh this session"
-      location: "tokenizer/v12/c8_code_corpus.jsonl (this repo)"
+      location: "tokenizer/v12/corpus/c8_code_corpus.jsonl (this repo, gitignored -- regenerate via corpus/build_code_corpus.py or pull the artifact from chuk-experiments)"
       source: "real source files harvested from this repo's own Rust/Python codebase — see manifest for exact file list + shas"
       caveat: "small (few MB) relative to the math/prose domains — a v0 seed sample, not a comprehensive code corpus; no external code dataset was pulled in"
-    manifest: "tokenizer/v12/c8_manifest.json — the actual frozen manifest (byte counts, mixture proportions, sampling seed) this commitment requires"
+    manifest: "tokenizer/v12/corpus/c8_manifest.json — the actual frozen manifest (byte counts, mixture proportions, sampling seed) this commitment requires"
   C9_cost_matching:
     primary: "TEG_FLOPs"
     deployment: "TEG_Time"
@@ -142,6 +142,39 @@ incumbent_ledger:
     real decision for Chris, not something to unilaterally patch during screening): both
     functions should split on literal 0x20 only, not is_ascii_whitespace(). Registered as
     result `v11_metaspace_root_cause_confirmed` on RUN-20260718-224711-00385.
+  fix_applied_2026_07_19: >
+    The metaspace fix above WAS applied (per Chris's instruction "lets patch v11"):
+    pretokenize_chunks()/metaspace()/reverse_metaspace() now split on literal space (0x20)
+    only. 18/18 v11-core unit tests pass (4 new regression tests), full `cargo test --workspace`
+    passes. Rebuilt release binary; chromosome.txt now gives 115 tok/1 UNK via the compiled
+    Rust binary, token-for-token identical to real HF tokenizers -- the Rust-vs-tokenizer.json
+    parity gap is closed and verified (not just argued). Disclosed side effect: unk_gate_pass
+    flips true->false on the 32-file harness sample (0->662 UNK total) because v11's vocab has
+    zero pieces for literal tab/newline -- this is the fix correctly REVEALING a real,
+    pre-existing vocab coverage gap, not a regression. Round-trip still fails 32/32 files, now
+    for the honest reason. Registered as result `v11_metaspace_fix_applied_and_verified` on
+    RUN-20260718-224711-00385.
+  MAJOR_2026_07_19_three_way_divergence: >
+    While verifying the fix above, found something bigger, NOT fixed, flagged for Chris:
+    native SentencePiece loading the real, sha-verified v11.model (sha256 4ffbfc87...c1dc8e6,
+    matches C2_eval_stream.tokenizer_used_for_this_dump exactly -- this is the actual file
+    corpus-atlas's a0_dump_stream.py used to build the already-frozen C2 24M-token eval
+    stream) gives 99 tokens/0 UNK on chromosome.txt -- neither the old NOR the newly-patched
+    Rust/tokenizer.json pair (114or115/0or1) matches this. Root cause: v11.model's own
+    normalizer_spec (read directly from the protobuf) is `name: nmt_nfkc,
+    remove_extra_whitespaces: True, add_dummy_prefix: True` -- native SentencePiece NFKC-
+    normalizes and collapses EVERY whitespace run before tokenizing. tokenizer.json has
+    `normalizer: null` -- this step was dropped entirely at whatever export produced
+    tokenizer.json/vocab.bin from v11.model. This is a DISTINCT, EARLIER, LARGER bug than the
+    pretokenization-chunking one just fixed (export-time normalizer loss, not a Rust
+    reimplementation gap) -- it means the frozen, pinned C2 stream was built with a tokenizer
+    that disagrees with the artifacts (tokenizer.json/vocab.bin) this repo's own harness and
+    Rust runtime use, a direct tension with C5 ("every artifact carries tokenizer sha256...
+    refuses hash-mismatched input"). Deliberately NOT reconciled this session -- reconciling
+    means deciding which artifact (v11.model's native SP behavior, or tokenizer.json's
+    Metaspace-only behavior) is canonical for TOK-0/C5 purposes, a decision for Chris. Registered
+    as result `v11_three_way_implementation_divergence` (verdict fail) on
+    RUN-20260718-224711-00385.
 
 tok1_grid_status:
   description: "Real evaluation status of the TOK-1 candidate grid, as of 2026-07-19. See tok-1-intrinsic-screen writeup v4 for full detail and candidates.jsonl (artifact tok-v12-candidates-grid-results:latest) for the raw rows."

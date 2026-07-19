@@ -5,7 +5,7 @@ unigram/bpe model types (used by train_candidate.py) aren't byte-level;
 this is a structurally different tokenizer family so it gets its own
 trainer, emitting the same vocab.json shape tokenizer_bench.py reads.
 
-Run: python3 tokenizer/v12/train_byte_level_bpe.py --vocab-size 4000
+Run: python3 tokenizer/v12/training/train_byte_level_bpe.py --vocab-size 4000
 """
 import argparse
 import json
@@ -13,8 +13,9 @@ from pathlib import Path
 
 from tokenizers import ByteLevelBPETokenizer
 
-V12_ROOT = Path(__file__).resolve().parent
-CORPUS_TXT = V12_ROOT / "c8_corpus_v0.txt"
+TRAINING_DIR = Path(__file__).resolve().parent
+V12_ROOT = TRAINING_DIR.parent
+CORPUS_TXT = V12_ROOT / "corpus" / "c8_corpus_v0.txt"
 
 
 def main():
@@ -23,7 +24,7 @@ def main():
     args = ap.parse_args()
 
     candidate_id = f"byte_level_bpe_{args.vocab_size}_v0"
-    out_dir = V12_ROOT / "candidates" / candidate_id
+    out_dir = TRAINING_DIR / "candidates" / candidate_id
     out_dir.mkdir(parents=True, exist_ok=True)
 
     tok = ByteLevelBPETokenizer()

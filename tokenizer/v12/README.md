@@ -17,6 +17,7 @@ tokenizer/v12/
   candidate_grid.yaml        TOK-1 4x4x3 grid + ABL-1 + Branch B + shadow lane
   dormant_block_map.yaml     C7 immutable vocab-block schema
   targets/                   t_core / t_cell / t_num / t_scale seed sets
+
   bench/                     all runnable harness code + its data
     tokenizer_bench.py       CLI: census, intrinsics, g0-smoke, roundtrip, grid-screen
     g1_selection.py          Gate G1 selection algorithm (Pareto frontier + rejects + tie-break)
@@ -26,15 +27,28 @@ tokenizer/v12/
       parity_vectors.jsonl         golden vectors shared by both languages
       test_canonicalizer_parity.py Python side of the parity check
       frame_battery.jsonl          T-num probes x 4 framing contexts
-    reports/                 run output lands here
+    reports/                 run output lands here (gitignored)
 
-  build_code_corpus.py       harvests this repo's own source into the C8 code domain
-  c8_code_corpus.jsonl / _manifest.json    95 files, 7 languages, sha-pinned per file
-  assemble_c8_corpus.py      streams TinyStories + samples cn7/cn8 math + loads code
-  c8_corpus_v0.jsonl / .txt  the assembled v0 mixture (5,595 rows, 1.9MB)
-  c8_manifest.json           the real C8 manifest: domains, byte counts, mixture, seed
-  train_candidate.py         trains a real SentencePiece candidate on c8_corpus_v0.txt
-  candidates/<id>/           trained .model + vocab.json per candidate
+  corpus/                    C8 corpus assembly (scripts + manifests tracked;
+                              the bulk .jsonl/.txt dumps are gitignored --
+                              regenerate via the scripts below, or pull the
+                              real artifact from chuk-experiments)
+    build_code_corpus.py       harvests this repo's own source into the C8 code domain
+    c8_code_corpus_manifest.json    95 files, 7 languages, sha-pinned per file
+    assemble_c8_corpus.py      streams TinyStories + samples cn7/cn8 math + loads code
+    c8_manifest.json           the real C8 manifest: domains, byte counts, mixture, seed
+    c8_code_corpus.jsonl / c8_corpus_v0.jsonl / .txt   (gitignored, regenerable)
+
+  training/                  candidate training + real evaluation (scripts
+                              tracked; trained candidates/ and candidates.jsonl
+                              are gitignored -- they're registered as real
+                              artifacts in chuk-experiments instead)
+    train_candidate.py         trains a real SentencePiece candidate on corpus/c8_corpus_v0.txt
+    train_byte_level_bpe.py    trains a real byte-level BPE candidate (tokenizers library)
+    build_pure_byte_vocab.py   builds the deterministic 260-token Branch B vocab
+    evaluate_candidate.py      evaluates every candidate through its own real library
+    candidates/<id>/           (gitignored) trained .model + vocab.json per candidate
+    candidates.jsonl           (gitignored) real per-candidate evaluation rows
 
 tokenizer/v12-msi/           Rust side of the MSI canonicalizer, workspace member
   Cargo.toml
@@ -59,16 +73,35 @@ tokenizer/v12-msi/           Rust side of the MSI canonicalizer, workspace membe
   still a stub on both sides — it needs a real TOK-1 candidate's merge
   table, which doesn't exist yet.
 - **Round-trip + UNK gate: run for real against the compiled v11 binary — found a genuine
-  incumbent defect.** `bench/tokenizer_bench.py roundtrip` shells out to
-  `target/release/v11` (build first: `cd tokenizer && cargo build --release -p v11-cli`)
-  and checks exact round-trip on all 32 files in `../../v11/corpus`. Result: UNK gate
-  passes (0 UNK anywhere), but **round-trip fails on 32/32 files**. Root cause confirmed
-  in `v11-core/src/pretokenize.rs`: every whitespace run (space/tab/newline, any length)
-  collapses to one marker on encode and is always reconstructed as a single ASCII space on
-  decode — newlines and indentation never survive a round trip. This is a 4th, previously
-  undocumented incident on the incumbent's G0 MSI profile (see `pins/tok0_pins.yaml`
-  `incumbent_ledger.newly_discovered_2026_07_19`) and would be a hard reject under the
-  design doc's own §2.3 gate.
+  incumbent defect, root-caused, and FIXED.** `bench/tokenizer_bench.py roundtrip` shells
+  out to `target/release/v11` (build first: `cd tokenizer && cargo build --release -p
+  v11-cli`) and checks exact round-trip on all 32 files in `../../v11/corpus`. Original
+  result: UNK gate passed (0 UNK anywhere), but round-trip failed on 32/32 files. Root
+  cause: `v11-core`'s `pretokenize_chunks()`/`metaspace()` treated any ASCII whitespace as
+  a chunk delimiter, but real HF `Metaspace` splits only on the literal space character
+  (0x20) — verified directly against the `tokenizers` library. **Patched** (both functions
+  now split on 0x20 only; 18/18 v11-core tests pass, 4 new regression tests added) and
+  **verified**: the compiled Rust binary now matches real HF `tokenizers` token-for-token
+  on the file that originally exposed the gap (115 tokens, 1 UNK, identical). Disclosed
+  side effect, not hidden: this correctly reveals a separate, pre-existing vocab coverage
+  gap — v11's vocab has no piece for a literal tab/newline, so `unk_gate_pass` now
+  correctly fails (662 UNK across the 32-file sample; code files hit hardest via
+  indentation) instead of masking it. Round-trip still fails 32/32 files, now for the
+  honest reason. Full detail in `pins/tok0_pins.yaml` `incumbent_ledger` and the
+  `tok-0-harness-pinning` writeup (chuk-experiments).
+- **Bigger, unresolved finding surfaced while verifying the fix: a real 3-way tokenizer
+  divergence.** Native SentencePiece loading the actual, sha-verified `v11.model` (the file
+  `corpus-atlas`'s pipeline used to build the already-frozen C2 eval stream) disagrees with
+  both the old and the now-patched Rust/`tokenizer.json` pair — 99 tokens/0 UNK vs 115/1 on
+  the same file. Root cause: `v11.model`'s own `normalizer_spec` (`nmt_nfkc`,
+  `remove_extra_whitespaces: True`) collapses all whitespace before tokenizing;
+  `tokenizer.json` has `normalizer: null` — that step was dropped at export time, a
+  distinct and earlier bug than the one just fixed. This means the pinned C2 stream was
+  built with a tokenizer that disagrees with the artifacts this repo's harness and Rust
+  runtime actually use — real tension with commitment C5. **Not resolved here** —
+  reconciling it means deciding which artifact is canonical, which is Chris's call, not an
+  engineering decision to make solo mid-session. See `pins/tok0_pins.yaml`
+  `incumbent_ledger.MAJOR_2026_07_19_three_way_divergence`.
 - **Gate G1 selection algorithm: implemented and unit-tested, not just scaffolded.**
   `bench/g1_selection.py::select_survivors` runs the doc's own funnel verbatim
   (hard rejects → threshold rejects → Pareto frontier over the four pinned axes →

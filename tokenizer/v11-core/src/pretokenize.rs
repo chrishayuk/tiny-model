@@ -9,24 +9,31 @@
 //!
 //! The output of pre-tokenization is the exact byte sequence that the
 //! longest-match tokenizer will scan over.
+//!
+//! This matches HF `Metaspace(replacement='▁', prepend_scheme=always,
+//! split=true)` exactly: only the literal ASCII space character (0x20)
+//! is replaced/split on. Every other character — including tab, newline,
+//! CR, and non-ASCII whitespace like U+00A0 — passes through unchanged
+//! and stays embedded in whichever chunk it falls in. (Verified directly
+//! against the real `tokenizers` library; a prior version of this file
+//! treated any `is_ascii_whitespace()` char as a split point, which is
+//! not what HF's Metaspace actually does — see
+//! `tokenizer/v12/pins/tok0_pins.yaml`'s `incumbent_ledger` for the
+//! round-trip and Python/Rust parity bugs that divergence caused.)
 
 use crate::WORD_START;
 
-/// Replace ASCII whitespace runs with `▁`. The first character of the
-/// result is always `▁` (acts as a BOS marker for longest-match).
+/// Replace literal space characters (0x20) with `▁`, one-for-one. Every
+/// other character, including other whitespace, passes through
+/// unchanged. The result always starts with `▁` (prepend_scheme=always),
+/// unless the input is empty.
 pub fn metaspace(input: &str) -> String {
-    let mut out = String::with_capacity(input.len() + 4);
-    let mut prev_space = true; // treat start-of-text as "after a space"
+    let mut out = String::with_capacity(input.len() + 1);
     for ch in input.chars() {
-        if ch.is_ascii_whitespace() {
-            prev_space = true;
-            continue;
-        }
-        if prev_space {
-            out.push(WORD_START);
-            prev_space = false;
-        }
-        out.push(ch);
+        out.push(if ch == ' ' { WORD_START } else { ch });
+    }
+    if !out.is_empty() && !out.starts_with(WORD_START) {
+        out.insert(0, WORD_START);
     }
     out
 }
@@ -77,5 +84,37 @@ mod tests {
     fn starts_with_marker() {
         assert!(metaspace("hello").starts_with(WORD_START));
         assert!(metaspace("a b c").starts_with(WORD_START));
+    }
+
+    #[test]
+    fn only_literal_space_is_replaced() {
+        // Regression test for the whitespace round-trip / Python-Rust parity
+        // bug: real HF Metaspace splits/replaces ONLY the literal space
+        // character (0x20). Tab, newline, CR, and non-ASCII whitespace
+        // (e.g. U+00A0) must pass through metaspace() untouched, embedded
+        // in place rather than collapsed into a WORD_START marker.
+        assert_eq!(metaspace("hello\nworld"), format!("{WORD_START}hello\nworld"));
+        assert_eq!(metaspace("hello\tworld"), format!("{WORD_START}hello\tworld"));
+        assert_eq!(
+            metaspace("hello\u{00A0}world"),
+            format!("{WORD_START}hello\u{00A0}world")
+        );
+        // A literal space still becomes the marker, same as before.
+        assert_eq!(
+            metaspace("hello world"),
+            format!("{WORD_START}hello{WORD_START}world")
+        );
+    }
+
+    #[test]
+    fn non_space_chars_survive_round_trip() {
+        // With the fix, decode(encode-equivalent-metaspace(s)) preserves
+        // newlines/tabs verbatim instead of turning them into spaces.
+        let cases = ["hello\nworld", "def f():\n\treturn 1", "a\rb"];
+        for s in cases {
+            let meta = metaspace(s);
+            let back = reverse_metaspace(&meta);
+            assert_eq!(back.trim_start(), s.trim_start(), "s={s:?} meta={meta:?} back={back:?}");
+        }
     }
 }

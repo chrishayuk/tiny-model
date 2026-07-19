@@ -9,7 +9,8 @@
 //! the same vocab.
 //!
 //! Pretokenization matches HF `Metaspace(prepend_scheme=always, split=true)`:
-//! whitespace runs split the stream into chunks, each chunk is prefixed
+//! only the literal space character (0x20) splits the stream into chunks
+//! (other whitespace stays embedded in-place); each chunk is prefixed
 //! with `▁`, and Viterbi runs per chunk.
 
 use std::collections::HashMap;
@@ -279,27 +280,41 @@ fn utf8_char_len(first_byte: u8) -> usize {
     }
 }
 
-/// Split input into HF-Metaspace chunks: whitespace runs are delimiters,
-/// each non-whitespace run becomes a chunk with a leading `▁`.
+/// Split input into HF-Metaspace chunks, matching real
+/// `Metaspace(replacement='▁', prepend_scheme=always, split=true)`
+/// exactly (verified directly against the `tokenizers` library): only the
+/// literal ASCII space character (0x20) is a delimiter. Every other
+/// character — tab, newline, CR, non-ASCII whitespace — stays embedded
+/// verbatim in whichever chunk it falls in; it is NOT a chunk boundary.
+/// A prior version of this function treated any `is_ascii_whitespace()`
+/// char as a delimiter, which does not match HF's actual behavior and
+/// was the root cause of both the round-trip decode bug and a
+/// Python/Rust token-count parity gap (see
+/// `tokenizer/v12/pins/tok0_pins.yaml`'s `incumbent_ledger`).
 fn pretokenize_chunks(input: &str) -> Vec<String> {
+    // Replace literal spaces with the marker, one-for-one; every other
+    // char (including other whitespace) passes through unchanged.
+    let mut buf = String::with_capacity(input.len() + 1);
+    for ch in input.chars() {
+        buf.push(if ch == ' ' { WORD_START } else { ch });
+    }
+    // prepend_scheme=always: ensure the buffer starts with a marker.
+    if !buf.is_empty() && !buf.starts_with(WORD_START) {
+        buf.insert(0, WORD_START);
+    }
+
+    // Split so each marker starts a new chunk (markers stay attached to
+    // the chunk they open, including chunks that are just the marker
+    // itself, e.g. from consecutive spaces).
     let mut chunks = Vec::new();
     let mut cur = String::new();
-    let mut in_word = false;
-    for ch in input.chars() {
-        if ch.is_ascii_whitespace() {
-            if in_word {
-                chunks.push(std::mem::take(&mut cur));
-                in_word = false;
-            }
-        } else {
-            if !in_word {
-                cur.push(WORD_START);
-                in_word = true;
-            }
-            cur.push(ch);
+    for ch in buf.chars() {
+        if ch == WORD_START && !cur.is_empty() {
+            chunks.push(std::mem::take(&mut cur));
         }
+        cur.push(ch);
     }
-    if in_word {
+    if !cur.is_empty() {
         chunks.push(cur);
     }
     chunks
@@ -392,13 +407,72 @@ mod tests {
     }
 
     #[test]
-    fn multiple_whitespace_collapses() {
+    fn extra_interior_spaces_do_not_collapse() {
+        // Real HF Metaspace does NOT collapse runs of spaces -- each extra
+        // literal space produces its own empty-content "▁" chunk, so more
+        // spaces means more tokens, not the same ids. (A prior version of
+        // this test asserted the opposite -- that whitespace runs collapse
+        // -- which matched this crate's old, incorrect implementation but
+        // not real HF behavior.)
         let t = Tokenizer::from_vocab(mini_vocab());
         let a = t.encode("hello world");
         let b = t.encode("hello    world");
-        let c = t.encode("  hello\tworld  ");
-        assert_eq!(a, b);
-        assert_eq!(a, c);
+        assert_ne!(a, b);
+        assert!(b.len() > a.len());
+    }
+
+    #[test]
+    fn non_space_whitespace_stays_embedded_in_its_chunk() {
+        // Tab/newline are NOT chunk delimiters in real HF Metaspace -- they
+        // stay embedded in whichever chunk they fall in, unlike the
+        // literal space character. mini_vocab has no piece containing a
+        // literal tab, so the whole "▁hello\tworld" chunk fails to match
+        // "▁hello" as a standalone piece and falls back to unk/char-level
+        // handling -- the point of this test is the *chunking*, verified
+        // directly against pretokenize_chunks below, not the vocab match.
+        assert_eq!(
+            pretokenize_chunks("hello\tworld"),
+            vec!["\u{2581}hello\tworld".to_string()]
+        );
+        assert_eq!(
+            pretokenize_chunks("hello world"),
+            vec!["\u{2581}hello".to_string(), "\u{2581}world".to_string()]
+        );
+    }
+
+    #[test]
+    fn pretokenize_chunks_matches_real_hf_metaspace() {
+        // Exact truth table, verified directly against the real
+        // `tokenizers` Python library's
+        // Metaspace(replacement='▁', prepend_scheme='always', split=True).
+        let cases: &[(&str, &[&str])] = &[
+            ("hello world", &["\u{2581}hello", "\u{2581}world"]),
+            (" hello", &["\u{2581}hello"]),
+            ("hello ", &["\u{2581}hello", "\u{2581}"]),
+            ("  hello", &["\u{2581}", "\u{2581}hello"]),
+            ("hello  ", &["\u{2581}hello", "\u{2581}", "\u{2581}"]),
+            ("", &[]),
+            (" ", &["\u{2581}"]),
+            ("  ", &["\u{2581}", "\u{2581}"]),
+            ("hello\nworld", &["\u{2581}hello\nworld"]),
+            (
+                "a b  c   d",
+                &[
+                    "\u{2581}a",
+                    "\u{2581}b",
+                    "\u{2581}",
+                    "\u{2581}c",
+                    "\u{2581}",
+                    "\u{2581}",
+                    "\u{2581}d",
+                ],
+            ),
+        ];
+        for (input, expected) in cases {
+            let chunks = pretokenize_chunks(input);
+            let expected: Vec<String> = expected.iter().map(|s| s.to_string()).collect();
+            assert_eq!(chunks, expected, "input={input:?}");
+        }
     }
 
     #[test]

@@ -7,7 +7,7 @@ and a vocab.json in the same {"pieces":[...], "special": {...}} shape
 tokenizer_bench.py already reads, so census/intrinsics run against it
 unmodified.
 
-Run: python3 tokenizer/v12/train_candidate.py --algorithm unigram --vocab-size 4000
+Run: python3 tokenizer/v12/training/train_candidate.py --algorithm unigram --vocab-size 4000
 """
 import argparse
 import json
@@ -15,8 +15,9 @@ from pathlib import Path
 
 import sentencepiece as spm
 
-V12_ROOT = Path(__file__).resolve().parent
-CORPUS_TXT = V12_ROOT / "c8_corpus_v0.txt"
+TRAINING_DIR = Path(__file__).resolve().parent
+V12_ROOT = TRAINING_DIR.parent
+CORPUS_TXT = V12_ROOT / "corpus" / "c8_corpus_v0.txt"
 
 
 def main():
@@ -27,7 +28,7 @@ def main():
     args = ap.parse_args()
 
     candidate_id = args.candidate_id or f"{args.algorithm}_sp_{args.vocab_size}_v0"
-    out_dir = V12_ROOT / "candidates" / candidate_id
+    out_dir = TRAINING_DIR / "candidates" / candidate_id
     out_dir.mkdir(parents=True, exist_ok=True)
     model_prefix = str(out_dir / candidate_id)
 

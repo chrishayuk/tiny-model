@@ -15,13 +15,14 @@ Domains:
   code             the full v0 code corpus already built by
                     build_code_corpus.py (c8_code_corpus.jsonl)
 
-Run: python3 tokenizer/v12/assemble_c8_corpus.py
+Run: python3 tokenizer/v12/corpus/assemble_c8_corpus.py
 """
 import json
 import random
 from pathlib import Path
 
-V12_ROOT = Path(__file__).resolve().parent
+CORPUS_DIR = Path(__file__).resolve().parent
+V12_ROOT = CORPUS_DIR.parent
 REPO_ROOT = V12_ROOT.parent.parent
 
 HUB_SHA = "f54c09fd23315a6f9c86f9dc80f725de7d8f9c64"  # same pinned revision as C2 eval stream
@@ -32,9 +33,9 @@ N_MATH = 4000
 CN_DATASETS = Path("/Users/christopherhay/chris-source/cell80/experiments/cell-native-architectures/artifacts/datasets")
 MATH_FILES = ["cn7_corpus_train.jsonl", "cn8_corpus_b.jsonl", "cn8_corpus_atok.jsonl", "cn8_corpus_aex.jsonl"]
 
-OUT_JSONL = V12_ROOT / "c8_corpus_v0.jsonl"
-OUT_TXT = V12_ROOT / "c8_corpus_v0.txt"
-OUT_MANIFEST = V12_ROOT / "c8_manifest.json"
+OUT_JSONL = CORPUS_DIR / "c8_corpus_v0.jsonl"
+OUT_TXT = CORPUS_DIR / "c8_corpus_v0.txt"
+OUT_MANIFEST = CORPUS_DIR / "c8_manifest.json"
 
 
 def sample_prose(n, seed):
@@ -70,7 +71,7 @@ def sample_math(n, seed):
 
 def load_code():
     rows = []
-    with (V12_ROOT / "c8_code_corpus.jsonl").open() as f:
+    with (CORPUS_DIR / "c8_code_corpus.jsonl").open() as f:
         for line in f:
             r = json.loads(line)
             rows.append({"domain": "code", "source": r["path"], "text": r["text"]})

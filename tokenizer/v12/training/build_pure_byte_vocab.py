@@ -6,13 +6,13 @@ represented by its single-byte UTF-8-unsafe form via the standard
 literal characters, matching how real byte-level tokenizers expose a byte
 alphabet as printable/escaped single characters.
 
-Run: python3 tokenizer/v12/build_pure_byte_vocab.py
+Run: python3 tokenizer/v12/training/build_pure_byte_vocab.py
 """
 import json
 from pathlib import Path
 
-V12_ROOT = Path(__file__).resolve().parent
-OUT_DIR = V12_ROOT / "candidates" / "pure_byte_v0"
+TRAINING_DIR = Path(__file__).resolve().parent
+OUT_DIR = TRAINING_DIR / "candidates" / "pure_byte_v0"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 

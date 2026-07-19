@@ -309,7 +309,7 @@ def main():
     p_rt.set_defaults(func=cmd_roundtrip)
 
     p_g1 = sub.add_parser("grid-screen", help="Gate G1 candidate selection (needs a real candidates file + decided pins)")
-    p_g1.add_argument("--candidates", default=str(V12_ROOT / "candidates.jsonl"), help="jsonl of candidate intrinsic/gate results")
+    p_g1.add_argument("--candidates", default=str(V12_ROOT / "training" / "candidates.jsonl"), help="jsonl of candidate intrinsic/gate results")
     p_g1.add_argument("--pins", default=str(V12_ROOT / "pins" / "tok0_pins.yaml"))
     p_g1.set_defaults(func=cmd_grid_screen)
 

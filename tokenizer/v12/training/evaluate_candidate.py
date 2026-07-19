@@ -29,14 +29,15 @@ Metrics:
                         count over ../v11/corpus, via each candidate's own
                         library -- not the Python trie approximation.
 
-Run: python3 tokenizer/v12/evaluate_candidate.py --all
+Run: python3 tokenizer/v12/training/evaluate_candidate.py --all
 """
 import argparse
 import json
 import sys
 from pathlib import Path
 
-V12_ROOT = Path(__file__).resolve().parent
+TRAINING_DIR = Path(__file__).resolve().parent
+V12_ROOT = TRAINING_DIR.parent
 REPO_ROOT = V12_ROOT.parent.parent
 V11_CORPUS = REPO_ROOT / "tokenizer" / "v11" / "corpus"
 TARGETS = V12_ROOT / "targets"
@@ -214,12 +215,12 @@ CANDIDATES = [
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--all", action="store_true")
-    ap.add_argument("--out", default=str(V12_ROOT / "candidates.jsonl"))
+    ap.add_argument("--out", default=str(TRAINING_DIR / "candidates.jsonl"))
     args = ap.parse_args()
 
     rows = []
     for candidate_id, algorithm, kind in CANDIDATES:
-        cdir = V12_ROOT / "candidates" / candidate_id
+        cdir = TRAINING_DIR / "candidates" / candidate_id
         if kind == "sp":
             backend = SPBackend(cdir / f"{candidate_id}.model")
         elif kind == "blbpe":
