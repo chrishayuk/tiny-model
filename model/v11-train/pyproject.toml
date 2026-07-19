@@ -14,6 +14,7 @@ dependencies = [
     "sentencepiece>=0.2",
     "torch>=2.2",
     "datasets>=2.18",
+    "tokenizers>=0.20",
 ]
 
 [tool.uv.sources]
