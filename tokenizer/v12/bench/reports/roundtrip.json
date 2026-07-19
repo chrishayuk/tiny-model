@@ -1,0 +1,170 @@
+{
+  "files_checked": 32,
+  "roundtrip_mismatches": [
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/c/01_basics.c",
+      "original_len": 532,
+      "decoded_len": 459
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/c/02_linked_list.c",
+      "original_len": 932,
+      "decoded_len": 781
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/go/01_basics.go",
+      "original_len": 674,
+      "decoded_len": 570
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/go/02_goroutines.go",
+      "original_len": 731,
+      "decoded_len": 590
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/java/01_basics.java",
+      "original_len": 790,
+      "decoded_len": 648
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/java/02_interfaces.java",
+      "original_len": 724,
+      "decoded_len": 587
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/javascript/01_basics.js",
+      "original_len": 630,
+      "decoded_len": 571
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/javascript/02_templates.js",
+      "original_len": 1011,
+      "decoded_len": 943
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/python/01_basics.py",
+      "original_len": 376,
+      "decoded_len": 315
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/python/02_classes.py",
+      "original_len": 1076,
+      "decoded_len": 836
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/python/03_async_io.py",
+      "original_len": 484,
+      "decoded_len": 436
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/python/04_modern.py",
+      "original_len": 1204,
+      "decoded_len": 1001
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/rust/01_basics.rs",
+      "original_len": 536,
+      "decoded_len": 412
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/rust/02_traits.rs",
+      "original_len": 672,
+      "decoded_len": 556
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/rust/03_collections.rs",
+      "original_len": 788,
+      "decoded_len": 735
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/typescript/01_interfaces.ts",
+      "original_len": 696,
+      "decoded_len": 595
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/typescript/02_generics.ts",
+      "original_len": 614,
+      "decoded_len": 509
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/code/typescript/03_react_hooks.tsx",
+      "original_len": 1592,
+      "decoded_len": 1205
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/prose/geography/canberra.txt",
+      "original_len": 383,
+      "decoded_len": 382
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/prose/geography/pacific.txt",
+      "original_len": 348,
+      "decoded_len": 347
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/prose/history/einstein.txt",
+      "original_len": 363,
+      "decoded_len": 362
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/prose/history/shakespeare.txt",
+      "original_len": 340,
+      "decoded_len": 339
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/prose/science/chromosome.txt",
+      "original_len": 429,
+      "decoded_len": 428
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/prose/science/electromagnetic.txt",
+      "original_len": 380,
+      "decoded_len": 379
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/prose/science/hydrogen.txt",
+      "original_len": 319,
+      "decoded_len": 318
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/prose/science/photosynthesis.txt",
+      "original_len": 401,
+      "decoded_len": 400
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/prose/science/thermodynamics.txt",
+      "original_len": 337,
+      "decoded_len": 336
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/prose/tech/algorithm.txt",
+      "original_len": 458,
+      "decoded_len": 457
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/prose/tech/http_json.txt",
+      "original_len": 466,
+      "decoded_len": 465
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/prose/tech/javascript.txt",
+      "original_len": 417,
+      "decoded_len": 416
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/prose/tech/python.txt",
+      "original_len": 442,
+      "decoded_len": 441
+    },
+    {
+      "file": "/Users/christopherhay/chris-source/tiny-model/tokenizer/v11/corpus/prose/tech/rust.txt",
+      "original_len": 460,
+      "decoded_len": 459
+    }
+  ],
+  "unk_total": 0,
+  "unk_files": [],
+  "errors": [],
+  "roundtrip_pass": false,
+  "unk_gate_pass": true
+}

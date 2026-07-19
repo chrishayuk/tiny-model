@@ -1,0 +1,4 @@
+{"text": "<call>", "role": "call_open", "category": 3, "source": "SCHEMA STUB"}
+{"text": "</call>", "role": "call_close", "category": 3, "source": "SCHEMA STUB"}
+{"text": "<arg>", "role": "arg_sep", "category": 3, "source": "SCHEMA STUB"}
+{"text": "<result>", "role": "result_marker", "category": 3, "source": "SCHEMA STUB"}

@@ -1,0 +1,621 @@
+{
+  "domain": "code",
+  "role": "C8 code-domain slice (v0 seed, this repo's own source)",
+  "total_files": 95,
+  "total_bytes": 299095,
+  "per_language": {
+    "rust": {
+      "files": 11,
+      "bytes": 57561
+    },
+    "python": {
+      "files": 73,
+      "bytes": 232608
+    },
+    "c": {
+      "files": 2,
+      "bytes": 1464
+    },
+    "go": {
+      "files": 2,
+      "bytes": 1405
+    },
+    "java": {
+      "files": 2,
+      "bytes": 1514
+    },
+    "javascript": {
+      "files": 2,
+      "bytes": 1641
+    },
+    "typescript": {
+      "files": 3,
+      "bytes": 2902
+    }
+  },
+  "source_dirs": [
+    "tokenizer/v11-core/src",
+    "tokenizer/v11-builder/src",
+    "tokenizer/v11-cli/src",
+    "tokenizer/v12-msi/src",
+    "model/v11-train",
+    "tokenizer/v12/bench",
+    "knowledge-extractor/src",
+    "benchmarks",
+    "tokenizer/v11/corpus/code"
+  ],
+  "combined_sha256": "e31bad8c49ce8d9b1958961f15623c20ca1bb7b0baf1dc4139f99f70d6bc0334",
+  "output": "tokenizer/v12/c8_code_corpus.jsonl",
+  "file_list": [
+    {
+      "path": "tokenizer/v11-core/src/error.rs",
+      "language": "rust",
+      "bytes": 546,
+      "sha256": "419c8df2685ba8e7f2b15e5ccb04874d16408c87ebb7271ea1c69118c5d4e33b"
+    },
+    {
+      "path": "tokenizer/v11-core/src/lib.rs",
+      "language": "rust",
+      "bytes": 1021,
+      "sha256": "d5d232a40472204838dba0ac058adff6c58e27a40ee97c1b2f3d32c7e92fd16f"
+    },
+    {
+      "path": "tokenizer/v11-core/src/pretokenize.rs",
+      "language": "rust",
+      "bytes": 2413,
+      "sha256": "30a046a71140e0ea4496c0181a214b603790ff0405bd770264e78c79f3a9dec1"
+    },
+    {
+      "path": "tokenizer/v11-core/src/tokenizer.rs",
+      "language": "rust",
+      "bytes": 15874,
+      "sha256": "e04faf2c209df3a5cce7aee0141459070ec7d93fc6ab05ae91f25c43b2eed28a"
+    },
+    {
+      "path": "tokenizer/v11-core/src/vocab.rs",
+      "language": "rust",
+      "bytes": 5883,
+      "sha256": "12e59c3ebb53806e4e5dcdbcb2b5c2153057c7b8a9cd4c87f03b161106b09399"
+    },
+    {
+      "path": "tokenizer/v11-builder/src/main.rs",
+      "language": "rust",
+      "bytes": 20549,
+      "sha256": "b184e5463fa7dcad955d4f5bb6d42bf4669e2301141b8437501de0be2da41963"
+    },
+    {
+      "path": "tokenizer/v11-cli/src/main.rs",
+      "language": "rust",
+      "bytes": 6167,
+      "sha256": "e82b6737bf440fec5aa8574017b5b64963d6d845dd86a05823aba749faa817de"
+    },
+    {
+      "path": "tokenizer/v12-msi/src/lib.rs",
+      "language": "rust",
+      "bytes": 3112,
+      "sha256": "01fe806331afb483f4cd32d6f1953bbc1e6a4850fa24b05f4df55f1484170a53"
+    },
+    {
+      "path": "model/v11-train/convert_to_safetensors.py",
+      "language": "python",
+      "bytes": 4859,
+      "sha256": "511f63d8af2d432d25ce557bd92fef379b254cc0d3ab2dfea552038d5b564a0c"
+    },
+    {
+      "path": "model/v11-train/train_tinystories.py",
+      "language": "python",
+      "bytes": 9961,
+      "sha256": "ca94e9c7aada4b34ecd63cf9b2f080d2125d9054854e24e7f475c1b38f63d62f"
+    },
+    {
+      "path": "tokenizer/v12/bench/g1_selection.py",
+      "language": "python",
+      "bytes": 4386,
+      "sha256": "5d4ef6269f29a1c3640d7789a8f3898b1286782c202500af6b6cf45d01c7bbfc"
+    },
+    {
+      "path": "tokenizer/v12/bench/msi/canonicalizer.py",
+      "language": "python",
+      "bytes": 2379,
+      "sha256": "3aa6d10ecfd4bab2a308c765c2433637512e9263dbb4fbd1d0a56c9b87d37406"
+    },
+    {
+      "path": "tokenizer/v12/bench/msi/test_canonicalizer_parity.py",
+      "language": "python",
+      "bytes": 1796,
+      "sha256": "5353e6614af2bc40c1fa415de91ba51b1c3bd5d80eccf53e302b06c81b3744c8"
+    },
+    {
+      "path": "tokenizer/v12/bench/test_g1_selection.py",
+      "language": "python",
+      "bytes": 6912,
+      "sha256": "23048dd6a1cc165ae13ac4645de3ca628402b542fb86267093bd78aff8e8b5b1"
+    },
+    {
+      "path": "tokenizer/v12/bench/tokenizer_bench.py",
+      "language": "python",
+      "bytes": 12911,
+      "sha256": "6ac9359ddd036391050711c7fe2b0ef767181eec5db42830cbf4aa9e35230c3e"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/__init__.py",
+      "language": "python",
+      "bytes": 411,
+      "sha256": "c3c54fe83f85e7f0580590a45f8b4a866fa8c0b1f34eadd64577be585b3c3378"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/ast/__init__.py",
+      "language": "python",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/ast/treesitter/__init__.py",
+      "language": "python",
+      "bytes": 282,
+      "sha256": "03a78ab9eb9a6f047d007054962d85760eb6c47160a769950b8f5729cac80d8c"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/ast/treesitter/downloader.py",
+      "language": "python",
+      "bytes": 2372,
+      "sha256": "28bfb809df205bdeabe84615a5c015a364877eff34915f4b2ee2d6447cedbf02"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/ast/treesitter/extractor.py",
+      "language": "python",
+      "bytes": 8442,
+      "sha256": "8ae34665f2d59681041c070aa1c8c06d675f5922b180d0e3cd26ef8e702160b7"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/ast/treesitter/model.py",
+      "language": "python",
+      "bytes": 10030,
+      "sha256": "e553f428c574d9bd8fa7367e05b7788af1ca0f3a695a3251dcf198d8b827ff57"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/base.py",
+      "language": "python",
+      "bytes": 6288,
+      "sha256": "26f8860d3e70613764733674dcf95cc63e05729c771bf763e8425dff74f442da"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/cli.py",
+      "language": "python",
+      "bytes": 6439,
+      "sha256": "62fd941735afa685e497671532815d365998c53d40acd8173c1989c3a8b81828"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/domain/__init__.py",
+      "language": "python",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/domain/standards/__init__.py",
+      "language": "python",
+      "bytes": 265,
+      "sha256": "6fcae395babf6c13ff83958640a46e13772d99edb08e757a5d386c63c1bb6223"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/domain/standards/downloader.py",
+      "language": "python",
+      "bytes": 585,
+      "sha256": "d49cc7c3ece725c3930b93492395dd1cd93d2e8a284ff43d96e5b1d0c1c91b67"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/domain/standards/extractor.py",
+      "language": "python",
+      "bytes": 672,
+      "sha256": "634c2d8ffbab75b15baa8e3b33dc0d274b117dba5b6c2ad038b345f676842a2e"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/domain/standards/model.py",
+      "language": "python",
+      "bytes": 4888,
+      "sha256": "5a34d4fca5559c6f3ffda4f4334fc661f302126e732817062c003b7d07334cc7"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/filter.py",
+      "language": "python",
+      "bytes": 954,
+      "sha256": "a5150f85f1f4b1dd0e6ec4a59c6597d043cdcb05805fb0386a22a7caaa32ebc8"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/io_utils.py",
+      "language": "python",
+      "bytes": 1240,
+      "sha256": "9087f1a3da118a2fb062bc2853fdb5a1e246bc2b7579afe24702b0ff14148e32"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/__init__.py",
+      "language": "python",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/countries/__init__.py",
+      "language": "python",
+      "bytes": 276,
+      "sha256": "ab4def33de0cdb2a96ec0172e242b522c44583acb6b7e40071d4c77197d111d3"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/countries/_data.py",
+      "language": "python",
+      "bytes": 26642,
+      "sha256": "bb513b213c7d965c67fb62db051dae1d13e576c368c3a300be1c8101ada9c6ad"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/countries/downloader.py",
+      "language": "python",
+      "bytes": 585,
+      "sha256": "05826a1cfcf7a81785ae72b3de70bb49dd196dff3d0bc707587b3a3a73d79270"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/countries/extractor.py",
+      "language": "python",
+      "bytes": 1639,
+      "sha256": "cf0cf237c69447483eb72d14cfe0cec4935bc6899a1b8132ed60a58d9715682f"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/countries/model.py",
+      "language": "python",
+      "bytes": 1929,
+      "sha256": "d3fe1f3f4a8834180f4518a766b8626a6665c78e6679fb2603833a2e0ec67aeb"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/natural_earth/__init__.py",
+      "language": "python",
+      "bytes": 297,
+      "sha256": "4b9025d09cf1a82ef510cf10a31d9b8d1bf2282594d215df35078af15cf694c9"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/natural_earth/downloader.py",
+      "language": "python",
+      "bytes": 3180,
+      "sha256": "3c827457439ad1483ac51956d1208d7dcb93e24a1f17a162b3f3d2ae1938b09d"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/natural_earth/extractor.py",
+      "language": "python",
+      "bytes": 6184,
+      "sha256": "544af74dc6d5450cf841a3d35a84d0280872b92946b2046e10a0da5d6c60c959"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/natural_earth/model.py",
+      "language": "python",
+      "bytes": 3844,
+      "sha256": "5f0dac6a31511cffc1dea78c8082dd796d86e2afc4c43241edd917b88fcf58ae"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/osm_gb/__init__.py",
+      "language": "python",
+      "bytes": 259,
+      "sha256": "bb3761ff9abb9a47306c314e04b507069295ba4ae54a7d0c6f10a1a954b6ad2a"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/osm_gb/downloader.py",
+      "language": "python",
+      "bytes": 2751,
+      "sha256": "c0a5d61bfcd0a770f2129d07a8e08f41fba0822e8a5b262e74cfc29850285f44"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/osm_gb/extractor.py",
+      "language": "python",
+      "bytes": 8692,
+      "sha256": "a111884ceff00ef85d5934801205f26313d88e88a8c02aa2da2c3cbf9c791202"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/osm_gb/model.py",
+      "language": "python",
+      "bytes": 3368,
+      "sha256": "42de6cdf76dfab3a4189a4b4bd70c53901044732066565544fc1dc32ef03e2c9"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/wikidata/__init__.py",
+      "language": "python",
+      "bytes": 259,
+      "sha256": "4b950b8c6b4502a79b0de66d103a650cde09a93b6824a06ac7fc7f4a32d2b4df"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/wikidata/downloader.py",
+      "language": "python",
+      "bytes": 4669,
+      "sha256": "859b812e88e494d9196404eadc1bfdeef49aa637e1dac55ad5c5aec57f8e926d"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/wikidata/extractor.py",
+      "language": "python",
+      "bytes": 2081,
+      "sha256": "dc7634d22d087091dcecee4891c2013b43d7420acddec24917537771e70c70d4"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/knowledge/wikidata/model.py",
+      "language": "python",
+      "bytes": 8004,
+      "sha256": "643d3160f8d11c335387cf126dd6f0308d9216f773a8a445da0d5108734256e7"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/__init__.py",
+      "language": "python",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/collocations/__init__.py",
+      "language": "python",
+      "bytes": 305,
+      "sha256": "ed3052669e09268339a9a45fc2cbda3c24dd87657392eccf6b469632572a2cb1"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/collocations/downloader.py",
+      "language": "python",
+      "bytes": 502,
+      "sha256": "4c6270fac6a3d0b9597a2df48062a0dc2ce4c1a99ec29763e3a6e79d3cb51bdb"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/collocations/extractor.py",
+      "language": "python",
+      "bytes": 2680,
+      "sha256": "d5e59c74172828a0d26d8ec3bdbbeb3553c9b84349009f831ef46bdad00d8df1"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/collocations/model.py",
+      "language": "python",
+      "bytes": 897,
+      "sha256": "27171ec1b1afb82dd8a8736d961e1b0e3f9ab80c1948e7c4fd6b6eebb52aa4fe"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/framenet/__init__.py",
+      "language": "python",
+      "bytes": 269,
+      "sha256": "f81d6ba66b87e9aa9e767c326c581f35fdad9ec65dcbd6d5c621151f8d3af9d1"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/framenet/downloader.py",
+      "language": "python",
+      "bytes": 485,
+      "sha256": "80c08025188bbd4d57a0db1727be38b967eaccb53be92839d56d6c074d6f8932"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/framenet/extractor.py",
+      "language": "python",
+      "bytes": 2224,
+      "sha256": "2977b1b05aabbbc8d0d378e3dfe22dd574aeb99dc4db77ad0ed7e0f92e1195b3"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/framenet/model.py",
+      "language": "python",
+      "bytes": 622,
+      "sha256": "238fac9a8a1c103ae78b924c83136c604fdd5a63eaad25aa91ca3656de487351"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/morphology/__init__.py",
+      "language": "python",
+      "bytes": 281,
+      "sha256": "e66dbd55f6356e129197d936b71acfecfbab78df583edc06af6e1f8a769dc87e"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/morphology/downloader.py",
+      "language": "python",
+      "bytes": 515,
+      "sha256": "9425e88a611204e7883af8c50662fc78e23e460e9c69d2823c8afaa8dd3e2057"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/morphology/extractor.py",
+      "language": "python",
+      "bytes": 5209,
+      "sha256": "2f0b0ed3b529486ca9ef875b472df9b45daef71f7ab6273d14173e81f0d6ed6b"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/morphology/model.py",
+      "language": "python",
+      "bytes": 789,
+      "sha256": "43920ea14468f730b6656a569b2803e68d01422f4dfb3bd14eefe1d76401718d"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/verbnet/__init__.py",
+      "language": "python",
+      "bytes": 266,
+      "sha256": "e5b421b43e7df9710a4d32319f88390a53b9db639f713f53aae996735582ee7b"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/verbnet/downloader.py",
+      "language": "python",
+      "bytes": 476,
+      "sha256": "eefcea5af1a8a66600cb28fbdebd180fa5e257c282b904dc8b60bed107fe6e17"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/verbnet/extractor.py",
+      "language": "python",
+      "bytes": 2514,
+      "sha256": "20e9d1665d2f899bf2003544bfd69043b130c4a75a459488ca612f5d2c749fe1"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/verbnet/model.py",
+      "language": "python",
+      "bytes": 590,
+      "sha256": "ba88620053c5cef42487b5b1ae6dbb112b9a6850ec86d2d7067440387c07a8cb"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/wordnet/__init__.py",
+      "language": "python",
+      "bytes": 269,
+      "sha256": "68b7541385d45ba1769e4c7db4ff86a45e03ee5a1847bbb760ba46456cfb466e"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/wordnet/downloader.py",
+      "language": "python",
+      "bytes": 478,
+      "sha256": "b2c34cf596cb0a5bb39fd556e7d6b82be41ca338648cf3057f2d8e0c2de8ea34"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/wordnet/extractor.py",
+      "language": "python",
+      "bytes": 3947,
+      "sha256": "385426d9dfff10fbe2a6b8754175596725821ed6f23f4305468d513dfff495d2"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/linguistics/wordnet/model.py",
+      "language": "python",
+      "bytes": 631,
+      "sha256": "05fd9682124edd19e23aa91f16ccf16d0d2c559ae75ca298fadfd824200a91d8"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/manifest.py",
+      "language": "python",
+      "bytes": 2208,
+      "sha256": "6893199c7362d0ad467237adbb521dac3df6b519be9315d8d6aead9a88ba2867"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/normaliser.py",
+      "language": "python",
+      "bytes": 2439,
+      "sha256": "81a7f43d77d194fb71339653f8767b3e40de619d986332a72768d37c574a98a9"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/paths.py",
+      "language": "python",
+      "bytes": 2022,
+      "sha256": "a10433927658112a1ecc9805e94bd64be282ee974676dea5d0b87addbe47f982"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/registry.py",
+      "language": "python",
+      "bytes": 4190,
+      "sha256": "d33d2ee62bd8bc961c3442e01478b111eedd09b73d2aec63c18fdac57751fd14"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/runner.py",
+      "language": "python",
+      "bytes": 6066,
+      "sha256": "cfe9fc80ee069a02340de9f11e6b3d8f258a2ec11aeb8fd2ed86615096e65b2f"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/tokeniser_check.py",
+      "language": "python",
+      "bytes": 1301,
+      "sha256": "da871ae31af80f5dc07a80be36f0554d12012017781d22a99aa28ab555cd6df4"
+    },
+    {
+      "path": "knowledge-extractor/src/knowledge_extractor/writer.py",
+      "language": "python",
+      "bytes": 1198,
+      "sha256": "6158797bd92185d6db00d947e95b6ec478d27c10e7278b17973482a74fced187"
+    },
+    {
+      "path": "benchmarks/benchmark_coverage.py",
+      "language": "python",
+      "bytes": 25364,
+      "sha256": "d168b638f6e587e2ef546089fee0f7f5dc2937bed1fe36769f9d0876a4020813"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/c/01_basics.c",
+      "language": "c",
+      "bytes": 532,
+      "sha256": "27ce1fc34b8530caa343824d956fa5907408410caaa57b757a5c0f06f4f6980a"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/c/02_linked_list.c",
+      "language": "c",
+      "bytes": 932,
+      "sha256": "74cfba3c877381101aef3253f5edd41215da83bd4c70f1ecdd15dbde003f5dc1"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/go/01_basics.go",
+      "language": "go",
+      "bytes": 674,
+      "sha256": "e94805bbd09d682352d44c8e557f2ad18b100b3172f88cb9049a1eb264028d60"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/go/02_goroutines.go",
+      "language": "go",
+      "bytes": 731,
+      "sha256": "33a6ce8536049a2c155f177098f15ebd4129182c515fcce0d40607c25078c373"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/java/01_basics.java",
+      "language": "java",
+      "bytes": 790,
+      "sha256": "35577e98cd26c5fdf767f1a872b611a58f255e751c063e14aafcec73ebca3e46"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/java/02_interfaces.java",
+      "language": "java",
+      "bytes": 724,
+      "sha256": "4fe29d1e9f0c00f52955f1b31501e07d03ca44b6e665a17933fdc0295dd6e522"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/javascript/01_basics.js",
+      "language": "javascript",
+      "bytes": 630,
+      "sha256": "71a55a7752ad947dcf97e30e77a17b9a3606cc3822f28a0b349969202e2d4843"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/javascript/02_templates.js",
+      "language": "javascript",
+      "bytes": 1011,
+      "sha256": "6ef82b832db5374927bc0c30c3cf03fc8c94150a09669884756bfde90dde9354"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/python/01_basics.py",
+      "language": "python",
+      "bytes": 376,
+      "sha256": "7b78fa398d0be1d1fb7b97545b9b9cdae0557ae7519abf1bc4388dccc5fe578d"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/python/02_classes.py",
+      "language": "python",
+      "bytes": 1076,
+      "sha256": "ce1745ad766e3a4e4f8b492ea299808c6d8a0566a52d76363efe22e5cf221bfe"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/python/03_async_io.py",
+      "language": "python",
+      "bytes": 484,
+      "sha256": "264780dd533f2587f3b978893480a77aa58d64d17c2b8ea8398135f541441665"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/python/04_modern.py",
+      "language": "python",
+      "bytes": 1204,
+      "sha256": "bbfb7dce6457b2eb50669c813e4db00a24598993045d709cc4b6b5d4a57fdd08"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/rust/01_basics.rs",
+      "language": "rust",
+      "bytes": 536,
+      "sha256": "107ed80536682a254f10400f2483454a7bb1383996ea9b007f046c1285b8f060"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/rust/02_traits.rs",
+      "language": "rust",
+      "bytes": 672,
+      "sha256": "e30cdb48b76a5e4e22e20121be4dcce7f27eee4aee3660808c36ff69883f00f6"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/rust/03_collections.rs",
+      "language": "rust",
+      "bytes": 788,
+      "sha256": "22653760c41578ae1352aeaf84022533a61adbc394ae0d088b57d95522a08584"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/typescript/01_interfaces.ts",
+      "language": "typescript",
+      "bytes": 696,
+      "sha256": "a11c735338814236554d0fcfe65caa5c6a0c9d894a6aadeea26838605149003e"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/typescript/02_generics.ts",
+      "language": "typescript",
+      "bytes": 614,
+      "sha256": "4316dce0a0466c7073adb904c348924e21ab2de41243a2190fc8086c24349503"
+    },
+    {
+      "path": "tokenizer/v11/corpus/code/typescript/03_react_hooks.tsx",
+      "language": "typescript",
+      "bytes": 1592,
+      "sha256": "145b785fa053938b0ec47e1fc6193983e5b7af72986c83fd3417e72b1adac925"
+    }
+  ]
+}

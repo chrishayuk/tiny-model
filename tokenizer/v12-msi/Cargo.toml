@@ -1,0 +1,12 @@
+[package]
+name = "v12-msi"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "v12 MSI canonicalizer — Rust side of the Python/Rust parity requirement (C7 / doc section 2.3)"
+keywords.workspace = true
+categories.workspace = true
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true

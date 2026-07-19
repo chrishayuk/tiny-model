@@ -1,0 +1,29 @@
+{"text": "3", "n_digits": 1, "kind": "integer"}
+{"text": "7", "n_digits": 1, "kind": "integer"}
+{"text": "0", "n_digits": 1, "kind": "integer"}
+{"text": "42", "n_digits": 2, "kind": "integer"}
+{"text": "17", "n_digits": 2, "kind": "integer"}
+{"text": "90", "n_digits": 2, "kind": "integer"}
+{"text": "256", "n_digits": 3, "kind": "integer"}
+{"text": "007", "n_digits": 3, "kind": "integer"}
+{"text": "999", "n_digits": 3, "kind": "integer"}
+{"text": "1024", "n_digits": 4, "kind": "integer"}
+{"text": "0042", "n_digits": 4, "kind": "integer"}
+{"text": "8080", "n_digits": 4, "kind": "integer"}
+{"text": "12345", "n_digits": 5, "kind": "integer"}
+{"text": "00700", "n_digits": 5, "kind": "integer"}
+{"text": "123456", "n_digits": 6, "kind": "integer"}
+{"text": "900000", "n_digits": 6, "kind": "integer"}
+{"text": "1234567", "n_digits": 7, "kind": "integer"}
+{"text": "0000007", "n_digits": 7, "kind": "integer"}
+{"text": "3.14", "kind": "decimal"}
+{"text": "0.5", "kind": "decimal"}
+{"text": "12.375", "kind": "decimal"}
+{"text": "100.00", "kind": "decimal"}
+{"text": "0.001", "kind": "decimal"}
+{"text": "+1", "kind": "structured_numeric"}
+{"text": "-42", "kind": "structured_numeric"}
+{"text": "1e6", "kind": "structured_numeric"}
+{"text": "3.14e-2", "kind": "structured_numeric"}
+{"text": "0x1F", "kind": "structured_numeric"}
+{"text": "0b101", "kind": "structured_numeric"}

@@ -1,0 +1,9 @@
+{"id": "start", "framed_ids": [10, 20, 30, 40], "operand_ids": [10, 20], "expect_class1": true, "expect_operand_ids": [10, 20]}
+{"id": "middle", "framed_ids": [5, 10, 20, 30], "operand_ids": [10, 20], "expect_class1": true, "expect_operand_ids": [10, 20]}
+{"id": "end", "framed_ids": [5, 6, 10, 20], "operand_ids": [10, 20], "expect_class1": true, "expect_operand_ids": [10, 20]}
+{"id": "single_token", "framed_ids": [1, 2, 3], "operand_ids": [2], "expect_class1": true, "expect_operand_ids": [2]}
+{"id": "whole_sequence", "framed_ids": [7, 8, 9], "operand_ids": [7, 8, 9], "expect_class1": true, "expect_operand_ids": [7, 8, 9]}
+{"id": "reordered_absent", "framed_ids": [1, 2, 3], "operand_ids": [3, 2], "expect_class1": false, "expect_operand_ids": null}
+{"id": "missing", "framed_ids": [1, 2, 3], "operand_ids": [9, 9], "expect_class1": false, "expect_operand_ids": null}
+{"id": "operand_longer_than_framed", "framed_ids": [1, 2], "operand_ids": [1, 2, 3], "expect_class1": false, "expect_operand_ids": null}
+{"id": "split_by_merge", "framed_ids": [1, 99, 2], "operand_ids": [1, 2], "expect_class1": false, "expect_operand_ids": null}

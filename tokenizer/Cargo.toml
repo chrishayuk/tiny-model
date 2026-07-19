@@ -6,6 +6,7 @@ members = [
     "v11-cli",
     "v11-bench",
     "v11-demos",
+    "v12-msi",
 ]
 exclude = ["v11-python"]
 

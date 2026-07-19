@@ -1,0 +1,11 @@
+{
+  "corpus": "tokenizer/v11/corpus",
+  "total_tokens": 9279,
+  "total_bytes": 28253,
+  "total_words": 543,
+  "unmapped_chars": 812,
+  "unmapped_fraction_of_positions": 0.08046774353384203,
+  "compression_tokens_per_byte": 0.32842529996814496,
+  "fertility_pieces_per_word": 17.08839779005525,
+  "note": "greedy longest-match simulation in pure Python \u2014 approximates but is NOT bit-identical to the real Rust v11 tokenizer; parity check is TODO. compression/fertility computed over successfully-mapped tokens only; high unmapped_fraction means these numbers understate real cost."
+}

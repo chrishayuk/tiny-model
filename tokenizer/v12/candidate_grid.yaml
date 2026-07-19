@@ -1,0 +1,42 @@
+# TOK-1 candidate grid — frozen before any candidate trains (G1 input)
+# 4 algorithms x 4 vocab sizes x 3 pre-tokenizations = 48 subword configs
+# + pure byte (collapses the vocab-size axis, tracked as Branch B)
+# + incumbent (v11 recovered SP, exempt from elimination)
+# + 2-3 shadow-lane configs (instrument validation only, no survivor slot)
+
+axes:
+  algorithm: ["unigram_sp", "bpe_sp", "byte_level_bpe", "pure_byte"]
+  core_vocab_size: [4000, 8000, 16000, 32000]
+  pre_tokenization: ["whitespace_split", "digit_isolating", "code_aware"]
+
+digit_policy: "C6 — single-char digits on every subword candidate"
+
+ablation:
+  ABL_1:
+    base: "best TOK-1 survivor's config"
+    variant: "atomic multi-digit instead of single-char"
+    stage: "TOK-2a"
+    can_win: false
+    prices: "P1' — the digit-interface tax"
+
+branch_b_pure_byte:
+  tracked_as: "independent branch, not part of the 4x4x3 grid"
+  vocab_axis: "collapsed (byte-level, ~256 base symbols)"
+  msi_strict: "≈1.0 by construction — no canonicalization burden"
+
+incumbent:
+  id: "v11_recovered_sp"
+  source: "../v11/artifacts/tokenizer.json"
+  vocab_total: 71261
+  exempt_from_elimination: true
+
+shadow_lane_configs:
+  # PIN: not yet decided — 2-3 deliberately below-floor configs (MSI-canonical
+  # below MSI_canonical_min), ideally within an otherwise-matched family.
+  # Occupy no survivor slots; train only at TOK-2c's smaller mini-ladder size.
+  - id: null
+    family: null
+    note: "TBD at TOK-0 pin finalization"
+  - id: null
+    family: null
+    note: "TBD at TOK-0 pin finalization"

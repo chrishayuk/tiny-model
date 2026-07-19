@@ -1,0 +1,50 @@
+# Immutable dormant-block map (C7) — schema pinned now, contents filled at
+# TOK-5 freeze once the winning candidate and its vocab layout are known.
+# No later additions permitted once frozen (C7).
+
+layout_order:
+  - block: "T-core natural language"
+    category: 0  # active from 115M, not part of the 5-way dormant/special taxonomy
+    active_at_115M: true
+
+  - block: "active specials"
+    category: 2
+    merge_opaque: true
+    active_at_115M: true
+    expected_census: null  # PIN: pinned expected count for G4 comparison, TBD
+
+  - block: "dormant: T-cell"
+    category: 3
+    merge_opaque: true
+    active_at_115M: false
+    active_at_1B: true
+    tokens: []  # PIN: immutable list (string, id, normalization, merge-precedence,
+                #      activation-stage, encoding-eligibility-at-115M) — frozen before
+                #      TOK-0 per-token; empty until the +792-style cell-grammar set
+                #      is finalized against the cell-native-architectures spec
+
+  - block: "dormant: T-scale"
+    category: 4
+    merge_opaque: false  # per C7, merge behaviour frozen like everything else but not
+                          # required opaque by the categories-2-3 rule
+    active_at_115M: false
+    active_at_1B: true
+    tokens: []  # PIN: immutable list, same fields as T-cell
+
+  - block: "padding"
+    category: 1
+    active_at_115M: true
+    semantic: false
+
+masking_policy:
+  implementation: "active-slice projection: hidden @ active_embedding.T over the contiguous active range"
+  dormant_rows_in_matmul: false
+  dormant_rows_in_optimizer_state: false
+  dormant_strings_in_clean_115M_stream: false  # enforced by Gate G4 count-0
+  fingerprint_init_preserved_until_activation: true  # guarantee by construction
+
+gate_G4_structural_checks:
+  category_1_padding_raw_stream_count: 0
+  category_2_active_specials_census: "must match expected_census above"
+  category_3_4_corpus_count: 0  # nonzero = segmentation contamination = structural FAIL
+  category_5_fraction: "within pinned budget (see pins/tok0_pins.yaml census_R_max)"

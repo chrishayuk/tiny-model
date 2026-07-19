@@ -1,0 +1,18 @@
+{
+  "vocab_total": 4000,
+  "special": {
+    "pad_id": 0,
+    "unk_id": 1,
+    "bos_id": 2,
+    "eos_id": 3
+  },
+  "exercised_count": 790,
+  "five_way_counts": {
+    "1": 1,
+    "2": 3,
+    "3": 0,
+    "4": 0,
+    "5": 3206
+  },
+  "note": "categories 3/4 are 0 for v11 by construction \u2014 no dormant blocks (fails C7)"
+}
