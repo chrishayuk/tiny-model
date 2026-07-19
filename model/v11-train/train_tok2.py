@@ -87,6 +87,14 @@ TINYSTORIES_COMPRESSION = {
     "v11": 0.2978,
     "bpe_sp_16000_v1_tcoreseed_bytefallback": 0.3984,
     "unigram_sp_18000_v2_tcoreseed_bytefallback": 0.2871,
+    # vocab-confound-control arm (2026-07-19): NOT one of the two real
+    # TOK-1 survivors -- queued after seeing candidate 2 (unigram_18000)
+    # track better than candidate 1 on BPB, specifically to test the
+    # 16k-vs-18k vocab confound the external review flagged, and the
+    # design doc's own registered P3 prediction ("BPB-core sublinear
+    # plateau ~16k"). Kept out of the primary TOK-2 ranking -- see
+    # tok-2b-fixed-trunk writeup.
+    "unigram_sp_16000_v2_tcoreseed_bytefallback": 0.2871,
 }
 
 V11_REFERENCE_BYTES_PHASE1 = V11_ORIGINAL_TOKENS_PHASE1 / TINYSTORIES_COMPRESSION["v11"]
